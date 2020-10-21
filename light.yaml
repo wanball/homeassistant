@@ -1,0 +1,41 @@
+####################################################
+#                                                  #
+#                    LIGHT                         #
+#                                                  #
+####################################################
+
+#https://www.home-assistant.io/integrations/light.xiaomi_miio/
+- platform: xiaomi_miio
+  name: Bed Room 1
+  host: !secret xiaomi_miio2
+  token: !secret xiaomi_miio_token2
+
+- platform: xiaomi_miio
+  name: Bed Room 2
+  host: !secret xiaomi_miio1
+  token: !secret xiaomi_miio_token1
+
+#https://www.home-assistant.io/integrations/light.switch/
+# - platform: switch
+#   name: Bathroom Lights
+#   entity_id: switch.bathroom_switch
+
+- platform: switch
+  name: Christmas Tree
+  entity_id: switch.0623071584f3eb78ee2a_1
+
+- platform: switch
+  name: Book Lamp
+  entity_id: switch.0623071584f3eb78ee2a_3
+
+#https://www.home-assistant.io/integrations/light.group/
+- platform: group
+  name: Bathroom Lights
+  entities:
+    - light.bathroom_light_1
+    - light.bathroom_light_2
+####################################################
+#                                                  #
+#           END OF CONFIGURATION FILE              #
+#                                                  #
+####################################################

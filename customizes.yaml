@@ -1,0 +1,160 @@
+####################################################
+#                                                  #
+#                 CUSTOMIZES                       #
+#                                                  #
+####################################################
+
+#### Light ####
+light.gateway_light_34ce00923c57:
+  friendly_name: Xiaomi Gateway Light
+
+#### Sensor ####
+sensor.illumination_34ce00923c57:
+  friendly_name: ความสว่าง ตู้เซิร์ฟเวอร์
+sensor.illumination_7c49eb84ad36:
+  friendly_name: ความสว่าง ห้องนอน
+sensor.xiaomi_balcony_humidity:
+  device_class: humidity
+  friendly_name: Balcony Humidity
+sensor.xiaomi_mijia_humidity:
+  device_class: humidity
+  friendly_name: Kitchen Humidity
+sensor.xiaomi_balcony_temperature:
+  device_class: temperature
+  friendly_name: Balcony Temperature
+sensor.xiaomi_mijia_temperature:
+  device_class: temperature
+  friendly_name: Kitchen Temperature
+
+#### Switch ####
+binary_sensor.switch_158d000170b8c8:
+  friendly_name: สวิตซ์หัวเตียง
+binary_sensor.switch_158d0002135afe:
+  friendly_name: สวิตซ์พัดลม
+binary_sensor.wall_switch_158d00015efd30:
+  friendly_name: สวิตซ์กำแพง ห้องนอน
+binary_sensor.wall_switch_158d000171024a:
+  friendly_name: สวิตซ์กำแพง ระเบียง
+binary_sensor.wall_switch_158d0002c9d5a7:
+  friendly_name: สวิตซ์กำแพง ห้องน้ำ
+binary_sensor.wall_switch_both_158d0002150321:
+  friendly_name: สวิตซ์กำแพง ห้องโถง กดพร้อมกัน
+binary_sensor.wall_switch_left_158d0002150321:
+  friendly_name: สวิตซ์กำแพง ห้องโถง กดซ๊าย
+binary_sensor.wall_switch_right_158d0002150321:
+  friendly_name: สวิตซ์กำแพง ห้องโถง กดขวา
+binary_sensor.wall_switch_both_158d000254cc2e:
+  friendly_name: สวิตซ์คู่ 1 กดพร้อมกัน
+binary_sensor.wall_switch_right_158d000254cc2e:
+  friendly_name: สวิตซ์คู่ 1 โคมตั้งพื้น
+binary_sensor.wall_switch_left_158d000254cc2e:
+  friendly_name: สวิตซ์คู่ 1 โคมเพดาน
+binary_sensor.wall_switch_both_158d000256a0a3:
+  friendly_name: สวิตซ์คู่ 2 กดพร้อมกัน
+binary_sensor.wall_switch_right_158d000256a0a3:
+  friendly_name: สวิตซ์คู่ 2 โคมตั้งพื้น
+binary_sensor.wall_switch_left_158d000256a0a3:
+  friendly_name: สวิตซ์คู่ 2 โคมเพดาน
+
+#### Door Sensor ####
+binary_sensor.door_window_sensor_158d0001de5eaa:
+  friendly_name: เซ็นเซอร์ประตู ระเบียง
+binary_sensor.door_window_sensor_158d0001dacf08:
+  friendly_name: เซ็นเซอร์ประตูหลัก
+binary_sensor.door_window_sensor_158d0001b7aecf:
+  friendly_name: เซ็นเซอร์ประตู ห้องนอน
+binary_sensor.door_window_sensor_158d00027b429d:
+  friendly_name: เซ็นเซอร์ประตู เครื่องซักผ้า
+binary_sensor.door_window_sensor_158d000272f10b:
+  friendly_name: เซ็นเซอร์ประตู ห้องน้ำ
+binary_sensor.door_window_sensor_158d000358d634:
+  friendly_name: เซ็นเซอร์เครื่องปรับอากาศ
+
+#### Motion Sensor ####
+binary_sensor.motion_sensor_158d0001e08cb7:
+  friendly_name: เซ็นเซอร์การเคลื่อนไหว ห้องครัว
+binary_sensor.motion_sensor_158d0002b70a9a:
+  friendly_name: เซ็นเซอร์การเคลื่อนไหว ห้องน้ำ
+binary_sensor.motion_sensor_158d0002fd500b:
+  friendly_name: เซ็นเซอร์การเคลื่อนไหว ห้องครัว 2
+
+#### Vibration ####
+binary_sensor.vibration_158d0002a2289d:
+  friendly_name: เซ็นเซอร์ตรวจจับการสั่นเครื่องปรับอากาศ
+
+#### Water Leak ####
+binary_sensor.water_leak_sensor_158d00023a7b61:
+  friendly_name: เซ็นเซอร์ตรวจจับน้ำ
+
+#### illumination ####
+sensor.illumination_158d0001e08cb7:
+  friendly_name: เซ็นเซอร์ความสว่าง ห้องครัว
+sensor.illumination_158d0002b70a9a:
+  friendly_name: เซ็นเซอร์ความสว่าง ห้องน้ำ
+sensor.illumination_158d0002fd500b:
+  friendly_name: เซ็นเซอร์ความสว่าง ห้องนอน
+
+#### Temperature ####
+sensor.living_room_temperature:
+  friendly_name: Living room Temperature
+  icon: mdi:thermometer
+sensor.temperature_158d000273cb96:
+  friendly_name: Bedroom Temperature
+  icon: mdi:thermometer
+sensor.temperature_158d0001ad378e:
+  friendly_name: Bathroom Temperature
+  icon: mdi:thermometer
+
+#### Humidity ####
+sensor.living_room_humidity:
+  friendly_name: Living room Humidity
+  icon: mdi:water-percent
+sensor.humidity_158d000273cb96:
+  friendly_name: Bedroom Humidity
+  icon: mdi:water-percent
+sensor.humidity_158d0001ad378e:
+  friendly_name: Bathroom Humidity
+  icon: mdi:water-percent
+
+#### PM2.5 ####
+sensor.living_room_pm_25:
+  friendly_name: TVOC
+  icon: mdi:cloud
+sensor.waqi_huaykwang:
+  friendly_name: Outdoor PM25
+  icon: mdi:cloud
+sensor.outdoor_pm_10:
+  friendly_name: Outdoor PM10
+  icon: mdi:cloud
+
+#### MOLD ####
+sensor.livingroom_mold_indicator:
+  icon: mdi:skull-crossbones
+sensor.bedroom_mold_indicator:
+  icon: mdi:skull-crossbones
+
+#### TVOC ####
+sensor.bedroom_tvoc:
+  friendly_name: Bedroom TVOC
+  icon: mdi:factory
+
+#### CO2 ####
+sensor.bedroom_co2a:
+  friendly_name: CO2a
+  icon: mdi:periodic-table-co2
+sensor.outdoor_co2:
+  friendly_name: CO2a
+  icon: mdi:periodic-table-co2
+
+#### MO2 ####
+sensor.outdoor_no2:
+  icon: mdi:skull-crossbones
+
+#### Speaker ####
+media_player.echo_flex:
+  device_class: speaker
+####################################################
+#                                                  #
+#           END OF CONFIGURATION FILE              #
+#                                                  #
+####################################################

@@ -1,0 +1,26 @@
+####################################################
+#                                                  #
+#                    SWITCH                        #
+#                                                  #
+####################################################
+
+#https://www.home-assistant.io/integrations/switch.xiaomi_aqara/
+- platform: xiaomi_miio
+  name: bedroom_fan_plug
+  host: !secret xiaomi_chuangmi_plug_v3_1
+  token: !secret xiaomi_chuangmi_plug_v3_token_1
+  model: chuangmi.plug.v3
+
+#https://www.home-assistant.io/integrations/wake_on_lan/
+- platform: wake_on_lan
+  mac: !secret nas_mac
+  name: "nas_wake"
+
+#https://www.home-assistant.io/integrations/switchbot/
+- platform: switchbot
+  mac: "e6:9b:c7:9f:7a:38"
+####################################################
+#                                                  #
+#           END OF CONFIGURATION FILE              #
+#                                                  #
+####################################################

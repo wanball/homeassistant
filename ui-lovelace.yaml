@@ -1,0 +1,83 @@
+####################################################
+#                                                  #
+#                   RESOURCES                      #
+#                                                  #
+####################################################
+
+resources:
+
+  - url: https://unpkg.com/moment@2.24.0/moment.js
+    type: js
+    
+  #https://github.com/MizterB/lovelace-secondaryinfo-entity-row
+  - url: /hacsfiles/secondaryinfo-entity-row/secondaryinfo-entity-row.js
+    type: module
+  #https://github.com/thomasloven/lovelace-card-tools
+  - url: /hacsfiles/lovelace-card-tools/card-tools.js
+    type: module
+  #https://github.com/custom-cards/vertical-stack-in-card
+  - url: /hacsfiles/vertical-stack-in-card/vertical-stack-in-card.js
+    type: module
+  #https://github.com/iammexx/home-assistant-config/tree/master/ui/darksky  
+  - url: /hacsfiles/weather-card/weather-card.js
+    type: module
+
+  #https://github.com/nervetattoo/simple-thermostat  
+  - url: /hacsfiles/simple-thermostat/simple-thermostat.js
+    type: module
+    
+  - url: /hacsfiles/mini-graph-card/mini-graph-card-bundle.js
+    type: module
+
+  - url: /hacsfiles/button-toolbar/button-toolbar.js
+    type: module
+
+  - url: /hacsfiles/text-divider-row/text-divider-row.js
+    type: module
+
+  - url: /local/custom_ui/card-modder.js?
+    type: module
+
+  - url: /hacsfiles/mini-media-player/mini-media-player-bundle.js
+    type: module
+
+  - url: /hacsfiles/spotify-card/spotify-card.js
+    type: module
+
+  - url: /hacsfiles/banner-card/banner-card.js
+    type: module
+
+  - url: /hacsfiles/upcoming-media-card/upcoming-media-card.js
+    type: module
+
+  - url: /hacsfiles/pie-chart-card/pie-chart-card.js
+    type: module
+
+  - url: /hacsfiles/lovelace-air-filter-card/air-filter-card.js
+    type: module
+
+  - url: /hacsfiles/bar-card/bar-card.js
+    type: module
+
+  - url: /hacsfiles/lovelace-time-picker-card/time-picker-card.js
+    type: module
+
+  - url: /hacsfiles/battery-state-card/battery-state-card.js
+    type: module
+cch:
+  options: clock
+
+title: Home
+background: center / cover no-repeat url("www/lovelace/background_15.png") fixed
+views:
+  - !include www/lovelace/home.yaml
+  - !include www/lovelace/livingroom.yaml
+  - !include www/lovelace/bedroom.yaml
+  - !include www/lovelace/other_room.yaml
+  - !include www/lovelace/automations.yaml
+
+####################################################
+#                                                  #
+#          END OF CONFIGURATION FILE               #
+#                                                  #
+####################################################

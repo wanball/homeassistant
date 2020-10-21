@@ -1,0 +1,146 @@
+project_id: !secret ga_project_id
+exposed_domains:
+  - switch
+  - light
+  - fan
+  - climate
+  - sensor
+  - vacuum
+  - media_player
+entity_config:
+  light.balcony_light:
+    name: Balcony Light
+    room: Balcony
+  light.sub_balcony_light:
+    name: Sub Balcony Light
+    room: Balcony
+  sensor.xiaomi_balcony_humidity:
+    room: Balcony
+  sensor.xiaomi_balcony_temperature:
+    room: Balcony
+  light.bed_room_2:
+    name: ไฟเพดาน
+    room: Bedroom
+  light.floor_lamp:
+    name: ไฟตั้งพื้น
+    room: Bedroom
+  light.peamai_bedside:
+    name: ไฟหัวเตียง
+    room: Bedroom
+    aliases:
+      - BRIGHT_LIGHTS
+  climate.bed_room_air_conditioner:
+    room: Bedroom
+  fan.bedroom_fan:
+    room: Bedroom
+  sensor.humidity_158d000273cb96:
+    room: Bedroom
+  sensor.temperature_158d000273cb96:
+    room: Bedroom
+  light.living_room_lights:
+    name: ไฟเพดาน
+    room: Living Room
+    aliases:
+      - BRIGHT_LIGHTS
+      - ENTRY_LIGHTS
+  light.christmas_tree:
+    name: ไฟต้นคริสต์มาส
+    room: Living Room
+  light.book_lamp:
+    name: ไฟตู้หนังสือ
+    room: Living Room
+  climate.living_room_air_conditioner:
+    room: Living Room
+  fan.living_room_air_purifier:
+    room: Living Room
+  sensor.living_room_temperature:
+    room: Living Room
+  sensor.living_room_humidity:
+    room: Living Room
+  light.kitchen_light:
+    name: Kitchen Room Light
+    room: Kitchen
+  sensor.xiaomi_mijia_humidity:
+    room: Kitchen
+  sensor.xiaomi_mijia_temperature:
+    room: Kitchen
+  light.bathroom_lights:
+    name: Bathroom Light
+    room: Bathroom
+  sensor.humidity_158d0001ad378e:
+    room: Bathroom
+  sensor.temperature_158d0001ad378e:
+    room: Bathroom
+  vacuum.living_room_vacuum:
+    name: หุ่นยนต์ดูดฝุ่น
+    room: Living Room
+  switch.manual_mode:
+    name: Manual mode
+    room: Routine
+  switch.routine_good_morning:
+    name: Good morning
+    room: Routine
+  switch.routine_good_night:
+    name: Good night
+    room: Routine
+  switch.routine_i_am_home:
+    name: I am home
+    room: Routine
+  switch.routine_leaving_home:
+    name: Leaving home
+    room: Routine
+  media_player.echo_flex:
+    name: ลำโพง
+    room: Bedroom
+  switch.0623071584f3eb78ee2a_1:
+    expose: false
+  switch.0623071584f3eb78ee2a_2:
+    expose: false
+  switch.0623071584f3eb78ee2a_3:
+    expose: false
+  switch.bedroom_fan_plug:
+    expose: false
+  switch.bedroom_fan_plug_usb:
+    expose: false
+  switch.bt_gateway_restart:
+    expose: false
+  switch.robot_vacuum:
+    expose: false
+  switch.routine_living_room_turn_off:
+    expose: false
+  switch.server_rack_fan_switch:
+    expose: false
+  switch.sonoff_basic_relay:
+    expose: false
+  switch.washing_machine:
+    expose: false
+  switch.plug_158d0003a03948:
+    expose: false
+  switch.nas_wake:
+    expose: false
+  light.bed_room_1:
+    expose: false
+  light.ceiling_lamp_1:
+    expose: false
+  light.ceiling_lamp_2:
+    expose: false
+  light.ceiling_lamp_3:
+    expose: false
+  light.ceiling_lamp_4:
+    expose: false
+  light.gateway_light_34ce00923c57:
+    expose: false
+  light.bathroom_light_1:
+    expose: false
+  light.bathroom_light_2:
+    expose: false
+  media_player.mybraviatv:
+    expose: false
+  media_player.spotify_ball:
+    expose: false
+  media_player.family_room_tv:
+    expose: false
+  media_player.living_room_speaker:
+    expose: false
+  media_player.living_room_tv:
+    expose: false

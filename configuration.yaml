@@ -1,0 +1,345 @@
+####################################################
+#                                                  #
+#                 HOME ASSISTANT                   #
+#                                                  #
+####################################################
+
+#https://home-assistant.io/docs/configuration/basic/
+homeassistant:
+  name: Home
+  latitude: !secret home_latitude
+  longitude: !secret home_longitude
+  elevation: !secret home_elevation
+  unit_system: metric
+  time_zone: !secret home_time_zone
+  packages: !include_dir_named packages
+  customize: !include customizes.yaml
+  allowlist_external_dirs:
+    - /config # for filesize sensor
+    - /tmp # for camera snapshots
+    - /dev # for camera snapshots
+    - /share
+
+####################################################
+#      LINKS TO INDIVUAL CONFIGURATION FILES       #
+####################################################
+
+#https://home-assistant.io/docs/configuration/splitting_configuration/
+automation: !include_dir_merge_list automation/
+#climate: !include climate.yaml
+#frontend: !include frontend.yaml
+google_assistant: !include google_assistant.yaml
+homekit: !include homekit.yaml
+light: !include light.yaml
+#media_player: !include media_player.yaml
+notify: !include notification.yaml
+recorder: !include recorder.yaml
+script: !include scripts.yaml
+sensor: !include_dir_merge_list sensors/
+switch: !include switches.yaml
+
+####################################################
+#                                                  #
+#                     GENERAL                      #
+#                                                  #
+####################################################
+
+#https://home-assistant.io/components/config/
+config:
+
+#https://www.home-assistant.io/integrations/discovery/
+# discovery:
+#   ignore:
+#   - yeelight
+#   - google_cast
+#   - igd
+
+#https://www.home-assistant.io/hassio/
+hassio:
+
+#https://home-assistant.io/components/history/
+history:
+
+#https://home-assistant.io/components/http/
+http:
+  #base_url: !secret base_url
+  #external_url: !secret url
+  #internal_url : !secret internal_url
+  ssl_certificate: /ssl/fullchain.pem
+  ssl_key: /ssl/privkey.pem
+
+#https://home-assistant.io/components/logger/
+logger:
+  default: error
+
+#https://www.home-assistant.io/lovelace/yaml-mode/
+lovelace:
+  mode: yaml
+
+#https://www.home-assistant.io/integrations/map/
+#map:
+
+#https://www.home-assistant.io/integrations/#media-player
+media_player:
+
+#https://www.home-assistant.io/integrations/mobile_app/
+mobile_app:
+
+#https://github.com/smartHomeHub/SmartIR
+smartir:
+
+#https://www.home-assistant.io/integrations/shopping_list/
+shopping_list:
+
+#https://home-assistant.io/components/sun/
+sun:
+
+#https://www.home-assistant.io/components/system_health/
+system_health:
+
+#https://www.home-assistant.io/integrations/google_translate/
+tts:
+  - platform: google_translate
+    language: "th"
+    cache: true
+    cache_dir: /tmp/tts
+    time_memory: 300
+
+####################################################
+#                    ASUS WRT                      #
+####################################################
+
+#https://www.home-assistant.io/integrations/asuswrt/
+asuswrt:
+  host: !secret router_device
+  username: !secret admin_username
+  password: !secret admin_password_easy
+  port: !secret asus_port
+  sensors:
+    - upload
+    - download
+    - upload_speed
+    - download_speed
+
+####################################################
+#                BINARY SENSOR                     #
+####################################################
+binary_sensor:
+  - platform: workday
+    country: SG
+    workdays: [mon, tue, wed, thu, fri, holiday]
+    excludes: [sat, sun]
+    add_holidays:
+      - "2020-10-13"
+      - "2020-10-23"
+      - "2020-12-05"
+      - "2020-12-31"
+
+####################################################
+#                    CAMERA                        #
+####################################################
+
+#https://www.home-assistant.io/integrations/generic_ip_camera/
+camera:
+  - platform: generic
+    still_image_url: https://api.sat24.com/animated/TH/visual/3/SE%20Asia%20Standard%20Time/3685991
+    name: Thailand Satelliet Images
+    limit_refetch_to_url_change: true
+
+####################################################
+#                DEVICE TRACKER                    #
+####################################################
+
+#https://www.home-assistant.io/integrations/device_tracker/
+device_tracker:
+  - platform: nmap_tracker
+    home_interval: 3
+    hosts:
+      - !secret ball_device
+      - !secret peamai_device
+
+  # - platform: mqtt
+  #   devices:
+  #     ball_binary: 'presence/ball'
+
+  - platform: asuswrt
+    interval_seconds: 10
+    consider_home: 180
+    new_device_defaults:
+      track_new_devices: false
+
+####################################################
+#                EMULATED HUE                      #
+####################################################
+
+#https://www.home-assistant.io/integrations/emulated_hue/
+emulated_hue:
+  type: alexa
+  off_maps_to_on_domains:
+    - script
+    - scene
+
+####################################################
+#                     FAN                          #
+####################################################
+
+#https://www.home-assistant.io/integrations/fan.xiaomi_miio/
+fan:
+  - platform: xiaomi_miio
+    host: !secret xiaomi_air_purifier_ip
+    token: !secret xiaomi_air_purifier_token
+    name: Living room Air Purifier
+
+####################################################
+#                     FAST                         #
+####################################################
+
+#https://www.home-assistant.io/integrations/fastdotcom/
+fastdotcom:
+  scan_interval:
+    minutes: 20
+
+####################################################
+#                    GROUP                         #
+####################################################
+
+#https://www.home-assistant.io/components/group/
+group:
+  family:
+    name: family
+    entities:
+      - person.peamai
+      - person.wanball
+
+####################################################
+#                    HEALTH                        #
+####################################################
+
+#https://www.home-assistant.io/integrations/air_quality.xiaomi_miio/
+air_quality:
+  - platform: xiaomi_miio
+    host: !secret air_quality_detector_ip
+    token: !secret air_quality_detector_token
+    name: Air Quality Monitor
+
+####################################################
+#                      IFTTT                       #
+####################################################
+
+#https://www.home-assistant.io/integrations/ifttt/
+ifttt:
+  key: !secret ifttt_key
+
+####################################################
+#                  INFLUXDB                        #
+####################################################
+
+#https://www.home-assistant.io/integrations/influxdb/
+influxdb:
+  host: localhost
+  port: !secret influxdb_port
+  database: !secret influxdb_db
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  include:
+    domains:
+      - sensor
+      - binary_sensor
+      - sun
+      - light
+
+####################################################
+#                     MQTT                         #
+####################################################
+
+#https://www.home-assistant.io/integrations/mqtt/
+mqtt:
+  broker: localhost
+  port: !secret mqtt_port
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+
+mqtt_statestream:
+  publish_attributes: true
+  publish_timestamps: true
+  base_topic: hass_io
+  include:
+    entities:
+      - climate.living_room_air_conditioner
+      - vacuum.living_room_vacuum
+
+####################################################
+#                    PLEX                          #
+####################################################
+#https://www.home-assistant.io/integrations/plex/
+plex:
+  token: !secret plex_token
+  host: !secret plex_host
+  port: !secret plex_port
+  media_player:
+    use_episode_art: true
+    ignore_new_shared_users: false
+
+####################################################
+#                    REMOTE                        #
+####################################################
+
+#https://www.home-assistant.io/integrations/broadlink/
+# remote:
+#   - platform: broadlink
+#     host: !secret broadlink_rm_pro_ip
+#     mac: !secret broadlink_rm_pro_mac
+
+####################################################
+#                     TUYA                         #
+####################################################
+#https://www.home-assistant.io/integrations/tuya/
+# tuya:
+#   username: !secret admin_email
+#   password: !secret admin_password_easy
+#   country_code: 66
+
+####################################################
+#                    XIAOMI                        #
+####################################################
+#https://www.home-assistant.io/integrations/xiaomi_aqara/
+# xiaomi_aqara:
+#   gateways:
+#     - key: !secret xiaomi_key
+#       host: !secret xiaomi_host_ip
+#       mac: !secret xiaomi_host_mac
+#     - key: !secret aqara_key
+#       host: !secret aqara_host_ip
+#       mac: !secret aqara_host_mac
+
+####################################################
+#                 WAKE ON LAN                      #
+####################################################
+#https://www.home-assistant.io/integrations/wake_on_lan/
+wake_on_lan:
+
+####################################################
+#                    WEATHER                       #
+####################################################
+#https://www.home-assistant.io/integrations/weather.darksky/
+weather:
+  - platform: darksky
+    api_key: !secret darksky_api
+    mode: daily
+
+####################################################
+#                    ZONE                          #
+####################################################
+#https://www.home-assistant.io/integrations/zone/
+zone:
+  - name: Nostra
+    latitude: !secret ball_work_latitude
+    longitude: !secret ball_work_longitude
+    radius: 150
+    icon: mdi:warehouse
+
+  - name: Work
+    latitude: !secret peamai_work_latitude
+    longitude: !secret peamai_work_longitude
+    radius: 150
+    icon: mdi:office-building

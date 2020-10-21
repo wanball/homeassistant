@@ -1,0 +1,72 @@
+#https://home-assistant.io/components/binary_sensor/
+
+#purge_interval: 1
+purge_keep_days: 30
+db_url: !secret db_url
+exclude:
+  domains:
+    - automation
+    - climate
+    - binary_sensor
+    - device_tracker
+    - weblink
+    - updater
+    - group
+    - light
+    - script
+    - switch
+    - zone
+    - zwave
+    - sensor
+  entities:
+    - sun.sun
+include:
+  domains:
+    - air_quality
+    - media_player
+    - cover
+    - person
+    - vacuum
+  entities:
+    - sensor.living_room_temperature
+    - sensor.living_room_pm_25
+    - sensor.living_room_humidity
+    - sensor.livingroom_mold_indicator
+    - sensor.temperature_158d000273cb96
+    - sensor.humidity_158d000273cb96
+    - sensor.pressure_158d000273cb96
+    - sensor.bedroom_co2a
+    - sensor.bedroom_tvoc
+    - sensor.bedroom_mold_indicator
+    - sensor.temperature_158d0001ad378e
+    - sensor.humidity_158d0001ad378e
+    - sensor.washing_machine_current_power_w
+    - sensor.xiaomi_mijia_temperature
+    - sensor.xiaomi_mijia_humidity
+    - sensor.dark_sky_daytime_high_temperature_0d
+    - sensor.dark_sky_overnight_low_temperature_0d
+    - sensor.dark_sky_temperature
+    - sensor.xiaomi_balcony_temperature
+    - sensor.xiaomi_balcony_humidity
+    - light.balcony_light
+    - light.bathroom_lights
+    - light.bed_room_2
+    - light.floor_lamp
+    - light.book_lamp
+    - light.ceiling_lamp_1
+    - light.ceiling_lamp_3
+    - light.christmas_tree
+    - light.kitchen_light
+    - light.peamai_bedside
+    - light.sub_balcony_light
+    - input_select.washing_machine_status
+    - sensor.asuswrt_download
+    - sensor.asuswrt_download_speed
+    - sensor.asuswrt_upload_speed
+    - sensor.fast_com_download
+    - sensor.vacuum_cleaning_time
+####################################################
+#                                                  #
+#          END OF CONFIGURATION FILE               #
+#                                                  #
+####################################################
