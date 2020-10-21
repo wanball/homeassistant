@@ -1,0 +1,149 @@
+#https://home-assistant.io/components/sensor/
+
+####################################################
+#                                                  #
+#                      Template                    #
+#                                                  #
+####################################################
+
+#https://www.home-assistant.io/integrations/template/
+  - platform: template
+    sensors:
+      living_room_temperature:
+        value_template: '{{ states.fan.living_room_air_purifier.attributes.temperature }}'
+        unit_of_measurement: '°C'
+        device_class: temperature
+      living_room_humidity:
+        value_template: '{{ states.fan.living_room_air_purifier.attributes.humidity }}'
+        unit_of_measurement: '%'
+        device_class: humidity
+      living_room_pm_25:
+        value_template: '{{ states.fan.living_room_air_purifier.attributes.aqi }}'
+        unit_of_measurement: 'μg/m3'
+
+      #other Air Quality 
+      outdoor_pm_10 :
+        value_template: '{{ states.sensor.waqi_huaykwang.attributes.pm_10 }}'
+        unit_of_measurement: 'AQI'  
+      outdoor_co :
+        value_template: '{{ states.sensor.waqi_huaykwang.attributes.co }}'
+        unit_of_measurement: 'AQI'  
+      outdoor_so2 :
+        value_template: '{{ states.sensor.waqi_huaykwang.attributes.sulfur_dioxide }}'
+        unit_of_measurement: 'AQI'
+      outdoor_no2 :
+        value_template: '{{ states.sensor.waqi_huaykwang.attributes.nitrogen_dioxide }}'
+        unit_of_measurement: 'AQI'
+      outdoor_ozone :
+        value_template: '{{ states.sensor.waqi_huaykwang.attributes.ozone }}'
+        unit_of_measurement: 'AQI'
+      bedroom_co2a :
+        value_template: '{{ states.air_quality.air_quality_monitor.attributes.carbon_dioxide_equivalent }}'
+        unit_of_measurement: 'PPM'
+      bedroom_tvoc :
+        value_template: '{{ states.air_quality.air_quality_monitor.attributes.total_volatile_organic_compounds }}'
+        unit_of_measurement: 'mg/m3'
+
+      #battery level door sensor    
+      battery_level_door_sensor_bedroom :
+        value_template: '{{ states.binary_sensor.door_window_sensor_158d0001b7aecf.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      battery_level_door_sensor_main :
+        value_template: '{{ states.binary_sensor.door_window_sensor_158d0001dacf08.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      battery_level_door_sensor_balcony :
+        value_template: '{{ states.binary_sensor.door_window_sensor_158d0001de5eaa.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      battery_level_door_sensor_bathroom :
+        value_template: '{{ states.binary_sensor.door_window_sensor_158d000272f10b.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      battery_level_door_sensor_washing_machine :
+        value_template: '{{ states.binary_sensor.door_window_sensor_158d00027b429d.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      battery_level_door_sensor_main_window :
+        value_template: '{{ states.binary_sensor.door_window_sensor_158d000358d634.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      #motion sensor
+      battery_level_motion_sensor_bedroom :
+        value_template: '{{ states.binary_sensor.motion_sensor_158d0002fd500b.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      battery_level_motion_sensor_bathroom :
+        value_template: '{{ states.binary_sensor.motion_sensor_158d0002b70a9a.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      battery_level_motion_sensor_kitchen :
+        value_template: '{{ states.binary_sensor.motion_sensor_158d0001e08cb7.attributes.battery_level }}'
+        device_class: battery
+      #switch
+      battery_level_switch_bedroom :
+        value_template: '{{ states.binary_sensor.switch_158d000170b8c8.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      battery_level_switch_fan :
+        value_template: '{{ states.binary_sensor.switch_158d0002135afe.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      #vibration
+      battery_level_vibration_sensor_air_conditioner :
+        value_template: '{{ states.binary_sensor.vibration_158d0002a2289d.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      #wall switch
+      battery_level_wall_switch_bedroom :
+        value_template: '{{ states.binary_sensor.wall_switch_158d00015efd30.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      battery_level_wall_switch_balcony :
+        value_template: '{{ states.binary_sensor.wall_switch_158d000171024a.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      battery_level_wall_switch_bathroom:
+        value_template: '{{ states.binary_sensor.wall_switch_158d0002c9d5a7.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      battery_level_wall_switch_livingroom :
+        value_template: '{{ states.binary_sensor.wall_switch_both_158d0002150321.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      battery_level_wall_switch_bedside :
+        value_template: '{{ states.binary_sensor.wall_switch_both_158d000254cc2e.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      battery_level_wall_switch_dressing :
+        value_template: '{{ states.binary_sensor.wall_switch_both_158d000256a0a3.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      # #water leak sensor
+      battery_level_water_leak_sensor_bathroom :
+        value_template: '{{ states.binary_sensor.water_leak_sensor_158d00023a7b61.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      #temperature sensor
+      battery_level_temperature_sensor_bathroom :
+        value_template: '{{ states.sensor.temperature_158d0001ad378e.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+      battery_level_temperature_sensor_bedroom :
+        value_template: '{{ states.sensor.temperature_158d000273cb96.attributes.battery_level }}'
+        device_class: battery
+        unit_of_measurement: '%'
+
+      #fan  
+      air_purifier_filter_life_remaining :
+        value_template: '{{ states.fan.living_room_air_purifier.attributes.filter_life_remaining }}'
+        unit_of_measurement: '%'
+        icon_template: >
+          {% set filter_life_level = states.fan.living_room_air_purifier.attributes.filter_life_remaining | default(0) | int %}
+          {% set filter_life_round = (filter_life_level / 10) |int * 10 %}
+          {% if filter_life_round >= 10 %}
+            mdi:air-filter
+          {% else %}
+            mdi:close-circle
+          {% endif %}

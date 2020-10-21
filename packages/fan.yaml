@@ -1,0 +1,174 @@
+###############################################################################
+#   @author         :   Wannarut Bunsang
+#   @date           :   08/02/2020
+#   @package        :   Template Fan
+#   @description    :
+#   @url            :   https://www.home-assistant.io/integrations/fan.template/
+###############################################################################
+#omeassistant:
+
+###############################################################################
+#                                     Fan                                     #
+###############################################################################
+
+#https://www.home-assistant.io/integrations/fan.template/
+fan:
+  - platform: template
+    fans:
+      bedroom_fan:
+        friendly_name: "Bedroom fan"
+        value_template: "{{ states('binary_sensor.bedroom_fan_status') }}"
+        speed_template: "{{ states('sensor.fan_current_speed') }}"
+        turn_on:
+          service: script.bedroom_fan_turn_on
+        turn_off:
+          service: script.bedroom_fan_turn_off
+        set_speed:
+          service: script.bedroom_fan_turn_on
+        speeds:
+          - "high"
+          - "medium"
+          - "low"
+      bedroom_air_purifier:
+        friendly_name: "Bedroom Air_Purifier"
+        turn_on:
+          service: script.bedroom_air_purifier_turn_on
+        turn_off:
+          service: script.bedroom_air_purifier_turn_off
+        value_template: "{{ states('binary_sensor.bedroom_air_purifier_status') }}"
+        speeds:
+          - "Single"
+
+###############################################################################
+#                                 SENSOR                                      #
+###############################################################################
+sensor:
+  - platform: template
+    sensors:
+      fan_current_speed:
+        value_template: >
+          {% set power_use = states.switch.bedroom_fan_plug.attributes.load_power | default(0) | int %}
+          {% if power_use >= 73 %}
+            high
+          {% elif power_use >= 68 %}
+            medium
+          {% elif power_use >= 60 %}
+            low
+          {% else %}
+            high
+          {% endif %}
+
+###############################################################################
+#                             BINARY SENSOR                                   #
+###############################################################################
+binary_sensor:
+  - platform: template
+    sensors:
+      bedroom_fan_status:
+        value_template: >
+          {% set power_use = states.switch.bedroom_fan_plug.attributes.load_power | default(0) | int %}
+          {% if power_use >= 50 %}
+            true
+          {% else %}
+            false
+          {% endif %}
+        icon_template: >-
+          {% if is_state("binary_sensor.bedroom_fan_status", "on") %}
+            mdi:fan
+          {% else %}
+            mdi:fan-off
+          {% endif %}
+      bedroom_air_purifier_status:
+        value_template: >
+          {% set power_use = states.switch.plug_158d0003a03948.attributes.load_power | default(0) | int %}
+          {% if power_use >= 2 %}
+            true
+          {% else %}
+            false
+          {% endif %}
+        icon_template: >-
+          {% if is_state("binary_sensor.bedroom_air_purifier_status", "on") %}
+            mdi:fan
+          {% else %}
+            mdi:fan-off
+          {% endif %}
+
+###############################################################################
+#                                 SCRIPT                                      #
+###############################################################################
+script:
+  bedroom_fan_turn_on:
+    alias: Bedroom Fan Turn on
+    sequence:
+      - service: climate.xiaomi_miio_send_command
+        data:
+          entity_id: climate.bed_room_air_conditioner
+          command: FE000000000000000000000000080024224C002F004100B300EA01CE038D0FE71388540102010101010101020102020202020202010202010101010102010102020202065307E1
+
+  bedroom_fan_turn_off:
+    alias: Bedroom Fan Turn off
+    sequence:
+      - service: climate.xiaomi_miio_send_command
+        data:
+          entity_id: climate.bed_room_air_conditioner
+          command: FE000000000000000000000000090024224D002D0036004400B500F201D603890FDA13886502030202020202020302030303030303030202020302020202030303020303031764086D
+
+  bedroom_fan_swing:
+    alias: Bedroom Fan Turn off
+    sequence:
+      - service: climate.xiaomi_miio_send_command
+        data:
+          entity_id: climate.bed_room_air_conditioner
+          command: FE000000000000000000000000090026224F0033003E00B000E901CC03920FE21388263D540102000101010101020102020202020202010201010101010102010202020202065308530799
+
+  bedroom_air_purifier_turn_on:
+    alias: Bedroom Fan Turn off
+    sequence:
+      - service: switch.turn_on
+        data:
+          entity_id: switch.plug_158d0003a03948
+      - delay: 1
+      - service: switch.turn_on
+        data:
+          entity_id: switch.switchbot
+
+  bedroom_air_purifier_turn_off:
+    alias: Bedroom Fan Turn off
+    sequence:
+      - service: switch.turn_off
+        data:
+          entity_id: switch.plug_158d0003a03948
+###############################################################################
+#                               Automations                                   #
+###############################################################################
+automation:
+  - alias: toggle air purifier on single press
+    initial_state: true
+    trigger:
+      - platform: event
+        event_type: xiaomi_aqara.click
+        event_data:
+          entity_id: binary_sensor.switch_158d0002135afe
+          click_type: single
+    action:
+      - service: fan.toggle
+        data:
+          entity_id: fan.bedroom_air_purifier
+# automation:
+#   - alias: toggle fan on single press
+#     initial_state: 'on'
+#     trigger:
+#       - platform: event
+#         event_type: xiaomi_aqara.click
+#         event_data:
+#           entity_id: binary_sensor.switch_158d0002135afe
+#           click_type: single
+#     action:
+#       - service: switch.toggle
+#         entity_id: switch.living_room_fan
+
+####################################################
+#                                                  #
+#           END OF CONFIGURATION FILE              #
+#                                                  #
+####################################################

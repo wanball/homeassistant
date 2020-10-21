@@ -1,0 +1,22 @@
+#https://home-assistant.io/components/sensor/
+
+####################################################
+#                                                  #
+#                  Mold Indicator                     #
+#                                                  #
+####################################################
+
+#https://www.home-assistant.io/integrations/mold_indicator/
+  - platform: mold_indicator
+    indoor_temp_sensor: sensor.living_room_temperature
+    indoor_humidity_sensor: sensor.living_room_humidity
+    outdoor_temp_sensor: sensor.xiaomi_balcony_temperature
+    calibration_factor: 2.0 
+    name: livingroom mold indicator
+    
+  - platform: mold_indicator
+    indoor_temp_sensor: sensor.temperature_158d000273cb96
+    indoor_humidity_sensor: sensor.humidity_158d000273cb96
+    outdoor_temp_sensor: sensor.xiaomi_balcony_temperature
+    calibration_factor: 2.0 
+    name: bedroom mold indicator

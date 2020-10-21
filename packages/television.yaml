@@ -1,0 +1,301 @@
+###############################################################################
+#   @author         :   Wannarut Bunsang
+#   @date           :   26/12/2019
+#   @package        :   Universal Media Player
+#   @description    :   
+#   @url            :   https://www.home-assistant.io/integrations/universal/
+###############################################################################
+homeassistant:
+  customize:
+    media_player.main_tv:
+      icon: mdi:television
+      friendly_name: Television
+      homebridge_name: Television
+
+media_player:
+  - platform: braviatv_psk
+    host: !secret tv_device
+    psk: sony
+    mac: !secret tv_device_mac
+    amp: True
+    android: True
+    sourcefilter:
+      - ' HD'
+      - ' TV'
+      - 'True4U'
+      - 'GMM25'
+      - 'CH8'
+      - 'MONO29'
+      - 'HDMI 1'
+      - 'HDMI 3'
+    name: MyBraviaTV
+
+  # - platform: androidtv
+  #   name: MyBraviaAndroidTV
+  #   device_class: androidtv
+  #   host: !secret tv_device
+  #   adb_server_ip: 127.0.0.1
+  #   adb_server_port: 5037
+  #   apps:
+  #     com.sony.dtv.tvx: "Digital Tv"
+  #     com.netflix.ninja: "Netflix"
+  #     com.google.android.youtube.tv: "Youtube"
+  #     com.linecorp.linetv: "Line TV"
+  #   state_detection_rules:
+  #     'com.sony.dtv.tvx':
+  #       - 'media_session_state'
+  #     'com.netflix.ninja':
+  #       - 'media_session_state'
+  #     'com.google.android.youtube.tv':
+  #       - 'media_session_state'
+  #     'com.linecorp.linetv':
+  #       - 'media_session_state'
+
+  # - platform: androidtv
+  #   name: MyTrueTV
+  #   device_class: androidtv
+  #   host: !secret true_settopbox
+  #   adb_server_ip: 127.0.0.1
+  #   adb_server_port: 5037
+  #   apps:
+  #     com.truedmp.idtv: "Digital TV"
+  #   state_detection_rules:
+  #     'com.truedmp.idtv':
+  #       - 'standby'
+
+# media_player:
+#   - platform: universal
+#     name: main_tv
+#     children:
+#       - media_player.lg_tv
+#       - media_player.true_tv
+#     commands:
+#       turn_on:
+#         service: switch.turn_off
+#         data:
+#           entity_id: switch.tv_lg_hdmi3_and_power
+#       turn_off:
+#         service: media_player.turn_off
+#         data:
+#           entity_id: media_player.lg_tv
+#       volume_up:
+#         service: media_player.volume_up
+#         data:
+#           entity_id: media_player.lg_tv
+#       volume_down:
+#         service: media_player.volume_down
+#         data:
+#           entity_id: media_player.lg_tv
+#       volume_mute:
+#         service: switch.turn_off
+#         data:
+#           entity_id: switch.tv_lg_volume
+#       select_source:
+#         service: media_player.select_source
+#         data_template:
+#           entity_id: media_player.receiver
+#           source: '{{ source }}'
+#     attributes:
+#       state: media_player.lg_tv
+#       is_volume_muted: media_player.lg_tv
+#       volume_level: media_player.lg_tv|volume_level
+#       source: media_player.true_tv|source
+#       source_list: media_player.true_tv|source_list
+
+###############################################################################
+#                               Script                                        #
+###############################################################################
+# script:
+#   androidtv_youtube:
+#     alias: 'Launch Youtube on Television'
+#     sequence:
+#       service: androidtv.adb_command
+#       data:
+#         entity_id: media_player.true_tv
+#         command: "am start -a android.intent.action.VIEW -d -n com.google.android.youtube.tv/com.google.android.apps.youtube.tv.activity.ShellActivity"
+  
+#   androidtv_netflix:
+#     alias: 'Launch Netflix on Television'
+#     sequence:
+#       service: androidtv.adb_command
+#       data:
+#         entity_id: media_player.true_tv
+#         command: "am start -a android.intent.action.VIEW -d -n com.netflix.ninja/.MainActivity"
+  
+#   androidtv_linetv:
+#     alias: 'Launch Line Tv on Television'
+#     sequence:
+#       service: androidtv.adb_command
+#       data:
+#         entity_id: media_player.true_tv
+#         command: "am start -a android.intent.action.VIEW -d -n com.linecorp.linetv"
+  
+#   androidtv_change_channel:
+#     alias: 'Launch Digital tv on Television'
+#     sequence:
+#       - service: androidtv.adb_command
+#         data:
+#           entity_id: media_player.true_tv
+#           command: "am start -a android.intent.action.VIEW -d -n com.truedmp.idtv"
+      # - delay: '00:00:03'
+      # - service: androidtv.adb_command
+      #   data:
+      #     entity_id: media_player.true_tv
+      #     command: "{{ firstDigi }}"
+      # - service: androidtv.adb_command
+      #   data:
+      #     entity_id: media_player.true_tv
+      #     command: "{{ secondDigit }}"
+      # - service: androidtv.adb_command
+      #   data:
+      #     entity_id: media_player.true_tv
+      #     command: "ENTER"
+
+###############################################################################
+#                               Automation                                    #
+###############################################################################
+# Automation.
+ # This automation script runs when a value is received via MQTT on retained topic: thermostatMode
+ # It sets the value selector on the GUI. This selector also had its own automation when the value is changed.
+# automation:
+#   - alias: Set Digital TV Channel Selector
+#     trigger:
+#       platform: mqtt
+#       topic: "tvChannel"
+#     # entity_id: input_select.tv_channel
+#     action:
+#       - service: input_select.select_option
+#         data_template:
+#           entity_id: input_select.tv_channel
+#           option: "{{ trigger.payload }}"
+
+#   # This automation script runs when the thermostat mode selector is changed.
+#   # It publishes its value to the same MQTT topic it is also subscribed to.
+#   - alias: Set Digital TV Channel
+#     trigger:
+#       platform: state
+#       entity_id: input_select.thermostat_mode
+#     action:
+#       - service: mqtt.publish
+#         data_template:
+#           topic: "tvChannel"
+#           retain: true
+#           payload: "{{ states('input_select.tv_channel') }}"
+#       - service: script.turn_on
+#         entity_id: script.androidtv_change_channel
+#         data:
+#           variables: >
+#             firstDigit: 
+#               {% if (is_state('input_select.tv_channel', 'TV5 HD1')) or
+#                     (is_state('input_select.tv_channel', 'NBT2HD')) or
+#                     (is_state('input_select.tv_channel', 'Thai PBS')) or
+#                     (is_state('input_select.tv_channel', 'TPTV'))  %}
+#                 "input keyevent 7"   
+#               {% elif (is_state('input_select.tv_channel', 'TNN16')) or
+#                       (is_state('input_select.tv_channel', 'New 18')) %}
+#                 "input keyevent 8"
+#               {% elif (is_state('input_select.tv_channel', 'Nation TV')) or
+#                       (is_state('input_select.tv_channel', 'Workpoint TV')) or
+#                       (is_state('input_select.tv_channel', 'True4U 24')) or
+#                       (is_state('input_select.tv_channel', 'GMM 25')) or
+#                       (is_state('input_select.tv_channel', 'Channel 8')) or
+#                       (is_state('input_select.tv_channel', 'Mono 29'))  %}
+#                 "input keyevent 9"
+#               {% else %}
+#                 "input keyevent 10"
+#               {% endif %}
+#             secondDigit:
+#               {% if (is_state('input_select.tv_channel', 'MCOT HD')) or
+#                     (is_state('input_select.tv_channel', 'TPTV'))  %}
+#                 "input keyevent 7"   
+#               {% elif (is_state('input_select.tv_channel', 'TV5 HD1')) or
+#                       (is_state('input_select.tv_channel', 'One 31')) %}
+#                 "input keyevent 8"
+#               {% elif (is_state('input_select.tv_channel', 'NBT2HD')) or
+#                       (is_state('input_select.tv_channel', 'Nation TV')) or
+#                       (is_state('input_select.tv_channel', 'Thairath TV')) %}
+#                 "input keyevent 9"
+#               {% elif (is_state('input_select.tv_channel', 'Workpoint TV')) or
+#                       (is_state('input_select.tv_channel', 'Channel 3 HD')) %}
+#                 "input keyevent 10"
+#               {% elif (is_state('input_select.tv_channel', 'True4U 24')) or
+#                       (is_state('input_select.tv_channel', 'Amarin TV')) %}
+#                 "input keyevent 11"
+#               {% elif (is_state('input_select.tv_channel', 'GMM 25')) or
+#                       (is_state('input_select.tv_channel', 'Channel 7 HD')) %}
+#                 "input keyevent 12"
+#               {% elif (is_state('input_select.tv_channel', 'TNN16')) or
+#                       (is_state('input_select.tv_channel', 'PPTV HD36')) %}
+#                 "input keyevent 13"
+#               {% elif (is_state('input_select.tv_channel', 'Channel 8'))  %}
+#                 "input keyevent 14"
+#               {% elif (is_state('input_select.tv_channel', 'New 18')) %}
+#                 "input keyevent 15"
+#               {% else %}
+#                 "input keyevent 16"
+#               {% endif %}
+
+#   - alias: Turn on settopbox same tv 
+#     initial_state: 'on' 
+#     trigger:
+#       - platform: state
+#         entity_id: media_player.main_tv
+#         from: 'off'
+#         to: 'playing'
+#     condition:
+#       condition: and
+#       conditions:
+#         - condition: state
+#           entity_id: media_player.true_tv
+#           state: 'off'
+#     action:
+#       - service: media_player.turn_on
+#         data:
+#           entity_id: media_player.true_tv
+
+#   - alias: Turn off settopbox same tv 
+#     initial_state: 'on' 
+#     trigger:
+#       - platform: state
+#         entity_id: media_player.main_tv
+#         from: 'playing'
+#         to: 'off'
+#     condition:
+#       condition: and
+#       conditions:
+#         - condition: state
+#           entity_id: media_player.true_tv
+#           state: 'standby'
+#     action:
+#       - service: media_player.turn_off
+#         data:
+#           entity_id: media_player.true_tv
+          
+###############################################################################
+#                               INPUT SELECT
+###############################################################################
+# input_select:
+#   tv_channel:
+#     name: TV Channel
+#     options:
+#       - "OFF"
+#       - "Workpoint TV"
+#       - "Mono 29"
+#       - "GMM 25"
+#       - "True4U 24"
+#       - "Channel 8"
+#       - "Thairath TV"
+#       - "One 31"
+#       - "Channel 3 HD"
+#       - "Channel 7 HD"
+#       - "PPTV HD36"
+#       - "Amarin TV"
+#       - "MCOT HD"
+#       - "TNN16"
+#       - "New 18"
+#       - "Nation TV"
+#       - "TV5 HD1"
+#       - "NBT2HD"
+#       - "Thai PBS"
+#       - "TPTV"
+#     icon: mdi:radio-tower

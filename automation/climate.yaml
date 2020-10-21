@@ -1,0 +1,30 @@
+#########################################################
+#                                                       #
+#                  CLIMATE AUTOMATION                   #
+#                                                       #
+#########################################################
+
+  - alias: Detect air conditioner working 
+    initial_state: true
+    trigger:
+      - platform: event
+        event_type: xiaomi_aqara.movement
+        event_data:
+          entity_id: binary_sensor.vibration_158d0002a2289d
+          movement_type: vibrate
+    condition:
+      condition: numeric_state
+      entity_id: sensor.living_room_temperature
+      below: 27
+    action:
+      - service: climate.set_temperature
+        data:
+          entity_id: climate.living_room_air_conditioner
+          temperature: 24
+          hvac_mode: cool
+
+#########################################################
+#                                                       #
+#            END OF CONFIGURATION FILE                  #
+#                                                       #
+#########################################################

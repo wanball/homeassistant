@@ -1,0 +1,16 @@
+#https://home-assistant.io/components/sensor/
+
+####################################################
+#                                                  #
+#                    MIN MAX                       #
+#                                                  #
+####################################################
+
+#https://www.home-assistant.io/integrations/min_max/
+  - platform: min_max
+    type: mean
+    entity_ids:
+      - sensor.waqi_huaykwang
+      - sensor.chinese_air_quality_index
+    name: outdoor_pm_25
+    round_digits: 0

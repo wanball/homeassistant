@@ -1,0 +1,139 @@
+###############################################################################
+#   @author         :   Wannarut Bunsang
+#   @date           :   04/01/2025
+#   @package        :   Yeelight Lights
+#   @description    :
+#   @url            :   https://github.com/smartHomeHub/SmartIR
+###############################################################################
+#omeassistant:
+
+###############################################################################
+#                               Climate                                       #
+###############################################################################
+
+#https://github.com/syssi/xiaomi_airconditioningcompanion
+climate:
+  - platform: xiaomi_miio_airconditioningcompanion
+    name: Bed Room Air Conditioner
+    host: !secret aqara_host_ip
+    token: !secret aqara_token
+    target_sensor: sensor.temperature_158d000273cb96
+    scan_interval: 20
+
+  #https://github.com/smartHomeHub/SmartIR
+  - platform: smartir
+    name: Living Room Air Conditioner
+    unique_id: living_room_air_conditioner
+    device_code: 1125
+    controller_data: remote.broadlink_remote
+    temperature_sensor: sensor.living_room_temperature
+    humidity_sensor: sensor.living_room_humidity
+    power_sensor: binary_sensor.air_conditioner_door
+
+###############################################################################
+#                           Binary Sensor                                     #
+###############################################################################
+binary_sensor:
+  - platform: template
+    sensors:
+      air_conditioner_door:
+        friendly_name: "air conditioner door"
+        delay_off:
+          minutes: 1
+        value_template: "{{ is_state('binary_sensor.door_window_sensor_158d000358d634', 'on') }}"
+
+###############################################################################
+#                               Automations                                   #
+###############################################################################
+automation:
+  - alias: Turn off Bedroom air conditioner
+    id: climate01
+    trigger:
+      platform: state
+      entity_id: climate.bed_room_air_conditioner
+      to: "off"
+    action:
+      service: fan.turn_on
+      data:
+        entity_id: fan.bedroom_fan
+
+  - alias: Turn on Bedroom air conditioner
+    id: climate02
+    trigger:
+      platform: state
+      entity_id: climate.bed_room_air_conditioner
+      to: "cool"
+    action:
+      service: fan.turn_off
+      data:
+        entity_id: fan.bedroom_fan
+
+  # - alias: Turn on switch air conditioner on vibration
+  #   id: climate03
+  #   initial_state: true
+  #   trigger:
+  #     platform: event
+  #     event_type: xiaomi_aqara.movement
+  #     event_data:
+  #       entity_id: binary_sensor.vibration_158d0002a2289d
+  #       movement_type: vibrate
+  #   condition:
+  #     condition: and
+  #     conditions:
+  #       - condition: template
+  #         value_template: "{{ not is_state('climate.living_room_air_conditioner', 'cool') }}"
+  #       - condition: state
+  #         entity_id: group.family
+  #         state: home
+  #   action:
+  #     service: climate.set_hvac_mode
+  #     data:
+  #       entity_id: climate.living_room_air_conditioner
+  #       hvac_mode: cool
+
+  # - alias: Turn on switch air conditioner on Temperature Low
+  #   id: climate04
+  #   initial_state: true
+  #   trigger:
+  #     below: 26
+  #     entity_id: sensor.living_room_temperature
+  #     platform: numeric_state
+  #   condition:
+  #     condition: and
+  #     conditions:
+  #       - condition: template
+  #         value_template: "{{ not is_state('climate.living_room_air_conditioner', 'cool') }}"
+  #       - condition: state
+  #         entity_id: group.family
+  #         state: home
+  #   action:
+  #     service: climate.set_hvac_mode
+  #     data:
+  #       entity_id: climate.living_room_air_conditioner
+  #       hvac_mode: cool
+
+  # - alias: Turn off switch air conditioner on Temperature high
+  #   id: climate05
+  #   initial_state: true
+  #   trigger:
+  #     above: 30
+  #     entity_id: sensor.living_room_temperature
+  #     platform: numeric_state
+  #   condition:
+  #     condition: and
+  #     conditions:
+  #       - condition: template
+  #         value_template: "{{ is_state('climate.living_room_air_conditioner', 'cool') }}"
+  #       - condition: state
+  #         entity_id: group.family
+  #         state: home
+  #   action:
+  #     service: climate.set_hvac_mode
+  #     data:
+  #       entity_id: climate.living_room_air_conditioner
+  #       hvac_mode: "off"
+####################################################
+#                                                  #
+#           END OF CONFIGURATION FILE              #
+#                                                  #
+####################################################

@@ -1,0 +1,225 @@
+###############################################################################
+#   @author         :   Wannarut Bunsang
+#   @date           :   31/12/2019
+#   @package        :   Template Vacuum
+#   @description    :   
+#   @url            :   https://www.home-assistant.io/integrations/vacuum.template/
+###############################################################################
+#omeassistant:
+
+###############################################################################
+#                                    VACUUM                                   #
+###############################################################################
+
+#https://www.home-assistant.io/integrations/vacuum.template/
+vacuum:
+  - platform: template
+    vacuums:
+      living_room_vacuum:
+        friendly_name: Livingroom Vacuum
+        battery_level_template: "{{ states('sensor.robot_vacuum_battery')|int }}"
+        value_template: >-
+          {% if is_state('sensor.robot_vacuum_robot_cleaner_movement', 'charging') %}
+            docked
+          {% elif is_state('sensor.robot_vacuum_robot_cleaner_movement', 'powerOff') %}
+            idle
+          {% elif is_state('sensor.robot_vacuum_robot_cleaner_movement', 'homing') %}
+            returning
+          {% elif is_state('sensor.robot_vacuum_robot_cleaner_movement', 'pause') %}
+            paused
+          {% elif is_state('sensor.robot_vacuum_robot_cleaner_movement', 'alarm') %}
+            error
+          {% else %}
+            {{ states.sensor.robot_vacuum_robot_cleaner_movement.state }}
+          {% endif %}
+        fan_speed_template: >-
+          {% if is_state('sensor.robot_vacuum_robot_cleaner_turbo_mode', 'silence') %}
+            Low
+          {% elif is_state('sensor.robot_vacuum_robot_cleaner_turbo_mode', 'off') %}
+            Medium
+          {% elif is_state('sensor.robot_vacuum_robot_cleaner_turbo_mode', 'on') %}
+            High
+          {% endif %}
+        start:
+          service: remote.send_command
+          data:
+            entity_id: remote.broadlink_remote
+            command: b64:JgBeAZWPFjMWDhYPFg4WDxYPFRAVMxYzFg4WDxYPFRAVDxUQFTMWDhYQFQ8VNBUQFQ8VEBUPFTQVNBU0FRAVNBU0FTQVNBUAA7SWkBU0FQ8VEBUPFRAVDxUQFTQVNBUPFRAVDxUQFQ8VEBU0FRAUEBUQFDQVEBUQExATEhU0FjQVNBUPFTMWMxYzFjMWAAO0l48VNBUQFBAVEBQPFg8VEBU0FTQVEBUPFRAVDxUQFQ8VNBUQFQ8VEBU0FQ8VEBUPFRAVNBU0FTQVDxU0FTMWNBU0FQADtJePFTMWEBUPFRAVDxUQFQ8VNBU0FRAVDxUQFQ8VEBUPFTQVEBUPFRAVNBUPFRAVDxUQFTMWMxYzFhAUNBU0FTQWNBUAA7SVjxYzFRATERMSFQ8WDxYOFjMWMxMSFg4XDxUQFA8WDxYyFw8VEBUPFTQVEBUPFRAVDxU0FTQVNBUQFTQVNBU0FTQVAA0FAAAAAAAAAAAAAA==
+        stop:
+          service: remote.send_command
+          data:
+            entity_id: remote.broadlink_remote
+            command: b64:JgBeAZWPFjMWDhYPFg4WDxYPFRAVMxYzFg4WDxYPFRAVDxUQFTMWDhYQFQ8VNBUQFQ8VEBUPFTQVNBU0FRAVNBU0FTQVNBUAA7SWkBU0FQ8VEBUPFRAVDxUQFTQVNBUPFRAVDxUQFQ8VEBU0FRAUEBUQFDQVEBUQExATEhU0FjQVNBUPFTMWMxYzFjMWAAO0l48VNBUQFBAVEBQPFg8VEBU0FTQVEBUPFRAVDxUQFQ8VNBUQFQ8VEBU0FQ8VEBUPFRAVNBU0FTQVDxU0FTMWNBU0FQADtJePFTMWEBUPFRAVDxUQFQ8VNBU0FRAVDxUQFQ8VEBUPFTQVEBUPFRAVNBUPFRAVDxUQFTMWMxYzFhAUNBU0FTQWNBUAA7SVjxYzFRATERMSFQ8WDxYOFjMWMxMSFg4XDxUQFA8WDxYyFw8VEBUPFTQVEBUPFRAVDxU0FTQVNBUQFTQVNBU0FTQVAA0FAAAAAAAAAAAAAA==
+        return_to_base:
+          service: remote.send_command
+          data:
+            entity_id: remote.broadlink_remote
+            command: b64:JgBcARU0Fg8VEBQQFRAUERQQFDQVNRQQFRAUEBUQFBAVEBQ1FDQVEBUQFBAVEBQQFRAUEBUQFTQVNBQ1FTQVNBU0FTQVAAO1lJEUNRQPFg8VEBUQFBAVEBQ1FTQUEBUQFBAVEBUPFRAVNBU0FQ8VEBUPFRAVDxUQFQ8VEBU0FTQVMxYzFjMWMxYzFgADtJaPFjMWDxUQFQ8VEBUPFRAVNBUzFg8VEBUPFRAVEBQPFjMWMxYPFRAVEBQQFRAUEBUQFBAVNBU0FTQVNBU0FTQVNBUAA7SWkBU0FRAUEBUQFBAVDxUPFjMWMxYPFRAVEBQPFhAVDxUzFjMWEBUPEhITERURFQ4TEhMREzYTNhYzFjMWMxYzFjMWAAO0l48VNBUQFQ8VEBUPFRAVDxU0FTQVEBUPFRAVDxUQFQ8VNBU0FRAVDxUQFQ8VEBUPFRAVDxU0FTQVNBU0FTQVNRQ1FQANBQAAAAAAAAAAAAAAAA==
+        clean_spot:
+          service: remote.send_command
+          data:
+            entity_id: remote.broadlink_remote
+            command: b64:JgBiAZaOFjMWDxYOExIVEBUQFRAUNBU0FRAVEBQQFRAUEBUQFDMWNBY0FQ8VEBUPFRAVDxUQFQ8VEBU0FTQVNBU0FTQVNBUAA7SWjxU1FBAVEBQQFRAUDxYPFTMWNBUQFRAUEBUQFQ8VEBU0FTQVNBUPFRAVDxUQFQ8VEBUPFRAVNBU0FTQVNBU0FTQVAAO0lo8VNBUQFRAUDxYPFRAVEBQ0FjQVDxUQFQ8VEBUPFRAVNBU0FTQVDxUQFQ8VEBUPFRAVDxUQFTQVMxYzFjMWMxYzFgABPAoAAm6WjhY0FRAVDxYPFRAVDhYQFTQVMxYPFRAVDxUQFQ8VEBUzFjQVMxYPFRAVDxUQFQ8VEBUPFRAVMxYzFjMWMxYzFjMWAAO0lo4XNBUPFRAVDxUQFQ8VEBU0FTQVDxUQFQ8VEBUPFRAVNBU0FTIXDxUQFQ8VEBUPFRAVDxUQFTQVNBU0FTQVNBU0FQANBQAAAAAAAA==
+        set_fan_speed:
+          service_template: >
+            script.vacuum_set_fan_speed_{{ fan_speed | lower }}
+        fan_speeds:
+            - Low
+            - Medium
+            - High
+
+###############################################################################
+#                                 SCRIPT                                      #
+###############################################################################
+script:
+  vacuum_set_fan_speed_low:
+    alias: Vacuum Fan Low
+    sequence:
+      - service: remote.send_command
+        data:
+          entity_id: remote.broadlink_remote
+          command: b64:JgBiAZaOFjMWDxYOExIVEBUQFRAUNBU0FRAVEBQQFRAUEBUQFDMWNBY0FQ8VEBUPFRAVDxUQFQ8VEBU0FTQVNBU0FTQVNBUAA7SWjxU1FBAVEBQQFRAUDxYPFTMWNBUQFRAUEBUQFQ8VEBU0FTQVNBUPFRAVDxUQFQ8VEBUPFRAVNBU0FTQVNBU0FTQVAAO0lo8VNBUQFRAUDxYPFRAVEBQ0FjQVDxUQFQ8VEBUPFRAVNBU0FTQVDxUQFQ8VEBUPFRAVDxUQFTQVMxYzFjMWMxYzFgABPAoAAm6WjhY0FRAVDxYPFRAVDhYQFTQVMxYPFRAVDxUQFQ8VEBUzFjQVMxYPFRAVDxUQFQ8VEBUPFRAVMxYzFjMWMxYzFjMWAAO0lo4XNBUPFRAVDxUQFQ8VEBU0FTQVDxUQFQ8VEBUPFRAVNBU0FTIXDxUQFQ8VEBUPFRAVDxUQFTQVNBU0FTQVNBU0FQANBQAAAAAAAA==
+
+  vacuum_set_fan_speed_medium:
+    alias: Vacuum Fan Medium
+    sequence:
+      - service: remote.send_command
+        data:
+          entity_id: remote.broadlink_remote
+          command: b64:JgBeAZWTEzgSExMSExITExMSExITOBI4ExITEhMTExITEhMTEjgTEhMSEzcTExMSExITExMSEzcTNxMTEzcTNxM3EzcTNxMAA7CUlBM3ExITExMSExITExMSEzcTNxMTExITEhMSExMTEhM3ExMTEhM3ExITExMSExITEhM4EzcTEhM3EzcTOBM3EzcTAAOwlJMTOBMSExITExITExITEhM4EzcTEhMSExMTEhMSExITOBMSExITNxMTExITEhMTEhMTNxM3ExITOBI4EzcTNxM3EwADsJSTEzcTExMSExITExMSExITNxM4EhMTEhMSExMTEhMSEzcTExMSEzcTEhMTExITEhMTEjgTNxMSEzcTNxM4EzUVNxMAA6+VkxM3ExMSExMSExITExMSEzcTNxMTExITEhMSExMTEhM3ExITExM3ExITExITExITEhM4EjgTEhM3EzcTNxM3EzgTAA0FAAAAAAAAAAAAAA==
+
+  vacuum_set_fan_speed_high:
+    alias: Vacuum Fan High
+    sequence:
+      - service: remote.send_command
+        data:
+          entity_id: remote.broadlink_remote
+          command: b64:JgBiAZaSFTUVEBUQFREVEBUQFREVNRU1FRAVERUQFRAVERUQFTUVNRURFBEVNRUQFREVEBUQFREVNRU1FRAVNRU2FDYVNRUAA66WkhQ2FRAVEBURFBEVEBURFDYVNRUQFRAVERUQFRAVERU1FTUVEBURFDYVEBUQFREUERUQFTUVNhQRFTUVNRU1FTYUAAOulpIVNRUQFREUERUQFREUERU1FTUVEBURFRAVEBURFBEVNRU1FREUERU1FRAVERQRFRAVEBU2FDYVEBU1FTUVNRU2FQADrZaSFTUVEBURFRAVEBURFBEVNRU1FREUERUQFRAVERUQFTUVNRURFBEVNRUQFREUERUQFREUNhU1FRAVNRU1FTYUNhUAA62WkhU1FREUERUQFRAVERUQFTUVNRURFBEVEBURFBEVEBU1FTUVERUQFTUVEBURFRAVEBURFDYVNRUQFTUVNRU2FTUVAAG1DAANBQAAAAAAAA==
+
+###############################################################################
+#                             INPUT BOOLEAN                                   #
+###############################################################################
+input_boolean:
+  robot_vacuum_active:
+    name: Robot Vacuum Today Active
+    icon: mdi:robot-vacuum-variant
+
+###############################################################################
+#                               Automations                                   #
+###############################################################################
+automation:
+- alias: Turn on Robot Vacuum on workdays
+  id: robotvacuum01 
+  trigger:
+    platform: state
+    entity_id: group.family
+    from: "home"
+    to: "not_home"
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: binary_sensor.workday_sensor
+        state: 'on'
+      - condition: numeric_state
+        entity_id: sensor.robot_vacuum_battery
+        above: 90
+      - condition: state
+        entity_id: input_boolean.robot_vacuum_active
+        state: 'off'
+      - condition: state
+        entity_id: sun.sun
+        state: 'above_horizon'
+  action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.robot_vacuum_active
+    - service: vacuum.start
+      entity_id: vacuum.living_room_vacuum
+
+- alias: Turn on Robot Vacuum on Full Battery
+  id: robotvacuum02 
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.robot_vacuum_battery
+    above: 98
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: binary_sensor.workday_sensor
+        state: 'on'
+      - condition: state
+        entity_id: group.family
+        state: "not_home"
+      - condition: state
+        entity_id: input_boolean.robot_vacuum_active
+        state: 'off'
+      - condition: state
+        entity_id: sun.sun
+        state: 'above_horizon'
+  action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.robot_vacuum_active
+    - service: vacuum.start
+      entity_id: vacuum.living_room_vacuum
+
+- alias: Robot Vacuum Start time
+  id: robotvacuum03 
+  trigger:
+    platform: state
+    entity_id: vacuum.living_room_vacuum
+    to: 'cleaning'
+  action:
+    service: input_datetime.set_datetime
+    entity_id: input_datetime.vacuum_start
+    data_template:
+      datetime: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}"
+
+- alias: Robot Vacuum Stop time
+  id: robotvacuum04 
+  trigger:
+    platform: time_pattern
+    seconds: '*'
+  condition:
+    condition: or
+    conditions:
+      - condition: state
+        entity_id: sensor.robot_vacuum_robot_cleaner_movement
+        state: 'powerOff'
+      - condition: state
+        entity_id: sensor.robot_vacuum_robot_cleaner_movement
+        state: 'homing'
+      - condition: state
+        entity_id: sensor.robot_vacuum_robot_cleaner_movement
+        state: 'pause'
+  action:
+    service: homeassistant.update_entity
+    entity_id: sensor.vacuum_cleaning_time
+
+###############################################################################
+#                                 SENSOR                                      #
+###############################################################################
+sensor:
+  - platform: template
+    sensors:
+      vacuum_cleaning_time:
+        value_template: >
+          {{ (as_timestamp(now())
+              - state_attr('input_datetime.vacuum_start', 'timestamp'))
+             |timestamp_custom('%H:%M:%S', false) }}
+
+###############################################################################
+#                           Input Datetime                                    #
+###############################################################################
+input_datetime:
+  vacuum_start:
+    has_date: true
+    has_time: true
+
+####################################################
+#                                                  #
+#           END OF CONFIGURATION FILE              #
+#                                                  #
+####################################################

@@ -1,0 +1,34 @@
+#########################################################
+#                                                       #
+#                    MQTT AUTOMATION                    #
+#                                                       #
+#########################################################
+
+  # - alias: Set Ball Presence Home
+  #   trigger:
+  #     - platform: state
+  #       entity_id: binary_sensor.arrival_sensor_presence
+  #       to: 'on'
+  #   action:
+  #     - service: mqtt.publish
+  #       data:
+  #         topic: presence/ball
+  #         payload: "home"
+  #         retain: "true"
+  # - alias: Set Ball Presence Not Home
+  #   trigger:
+  #     - platform: state
+  #       entity_id: binary_sensor.arrival_sensor_presence
+  #       to: 'off'
+  #   action:
+  #     - service: mqtt.publish
+  #       data:
+  #         topic: presence/ball
+  #         payload: "not home"
+  #         retain: "true"
+
+#########################################################
+#                                                       #
+#            END OF CONFIGURATION FILE                  #
+#                                                       #
+#########################################################

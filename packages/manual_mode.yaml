@@ -1,0 +1,131 @@
+###############################################################################
+#   @author         :   Wannarut Bunsang
+#   @date           :   25/12/2019
+#   @package        :   Manual mode
+#   @description    :
+#   @url            :
+###############################################################################
+
+###############################################################################
+#                             INPUT BOOLEAN                                   #
+###############################################################################
+#https://www.home-assistant.io/integrations/input_boolean/
+input_boolean:
+  manual_mode:
+    name: Manual mode
+    initial: off
+    icon: mdi:gesture-double-tap
+
+###############################################################################
+#                                SWITCH                                       #
+###############################################################################
+#https://www.home-assistant.io/integrations/switch.template/
+switch:
+  - platform: template
+    switches:
+      manual_mode:
+        friendly_name: "Manual mode"
+        value_template: "{{ is_state('input_boolean.manual_mode', 'on') }}"
+        turn_on:
+          service: script.turn_on
+          data:
+            entity_id: script.manual_mode_on
+        turn_off:
+          service: script.turn_on
+          data:
+            entity_id: script.manual_mode_off
+
+###############################################################################
+#                               Automations                                   #
+###############################################################################
+automation:
+  - alias: good night on wall switch
+    id: manual_mode
+    initial_state: true
+    trigger:
+      - platform: event
+        event_type: xiaomi_aqara.click
+        event_data:
+          entity_id: binary_sensor.wall_switch_both_158d0002150321
+          click_type: both
+    action:
+      - service: switch.turn_on
+        data:
+          entity_id: switch.manual_mode
+
+###############################################################################
+#                                 SCRIPT                                      #
+###############################################################################
+script:
+  manual_mode_on:
+    sequence:
+      - service: input_boolean.turn_on
+        data:
+          entity_id: input_boolean.manual_mode
+      - service: switch.turn_on
+        data:
+          entity_id:
+            - switch.bedroom_fan_plug
+            - switch.bedroom_fan_plug_usb
+            - switch.washing_machine
+            - switch.plug_158d0003a03948
+            - switch.routine_i_am_home
+      - service: fan.turn_on
+        data:
+          entity_id:
+            - fan.living_room_air_purifier
+      - service: automation.turn_off
+        data:
+          entity_id:
+            - automation.turn_on_device_when_people_are_home
+            - automation.turn_off_device_when_nobody_s_home
+            - automation.change_staus_to_i_am_home
+            - automation.good_morning
+            - automation.good_night_on_wall_switch
+            - automation.wake_on_night_by_wall_switch
+            - automation.homeassistant_start_when_nobody_s_home
+            - automation.homeassistant_starte_when_people_are_home
+            - automation.toggle_balcony_light_on_door_sensor
+            - automation.if_there_is_motion_and_its_dark_turn_off_the_light_in_bath_room
+            - automation.if_there_is_motion_and_its_dark_turn_off_the_light_in_kitchen_room
+            - automation.if_there_is_motion_and_its_dark_turn_on_the_light_in_bath_room
+            - automation.if_there_is_motion_and_its_dark_turn_on_the_light_in_kitchen_room
+      - service: tts.google_translate_say
+        entity_id: media_player.living_room_speaker
+        data:
+          message: "manual mode turn on"
+
+  manual_mode_off:
+    sequence:
+      - service: input_boolean.turn_off
+        data:
+          entity_id: input_boolean.manual_mode
+      - service: switch.turn_on
+        data:
+          entity_id:
+            - switch.routine_i_am_home
+      - service: automation.turn_on
+        data:
+          entity_id:
+            - automation.turn_on_device_when_people_are_home
+            - automation.turn_off_device_when_nobody_s_home
+            - automation.change_staus_to_i_am_home
+            - automation.good_morning
+            - automation.good_night_on_wall_switch
+            - automation.wake_on_night_by_wall_switch
+            - automation.homeassistant_start_when_nobody_s_home
+            - automation.homeassistant_starte_when_people_are_home
+            - automation.toggle_balcony_light_on_door_sensor
+            - automation.if_there_is_motion_and_its_dark_turn_off_the_light_in_bath_room
+            - automation.if_there_is_motion_and_its_dark_turn_off_the_light_in_kitchen_room
+            - automation.if_there_is_motion_and_its_dark_turn_on_the_light_in_bath_room
+            - automation.if_there_is_motion_and_its_dark_turn_on_the_light_in_kitchen_room
+      - service: tts.google_translate_say
+        entity_id: media_player.living_room_speaker
+        data:
+          message: "manual mode turn off"
+#########################################################
+#                                                       #
+#            END OF CONFIGURATION FILE                  #
+#                                                       #
+#########################################################

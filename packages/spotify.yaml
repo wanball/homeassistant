@@ -1,0 +1,25 @@
+###############################################################################
+#   @author         :   Wannarut Bunsang
+#   @date           :   09/01/2020
+#   @package        :   Spotify Media Player
+#   @description    :   
+#   @url            :   https://www.home-assistant.io/integrations/spotify/
+###############################################################################
+homeassistant:
+  customize:
+    media_player.main_tv:
+      icon: mdi:spotify
+      friendly_name: Spotify
+      homebridge_name: Spotify
+
+#https://www.home-assistant.io/integrations/spotify/    
+spotify:
+  client_id: !secret spotify_id
+  client_secret: !secret spotify_password
+          
+###############################################################################
+#                               SPOTCAST                                      #
+###############################################################################
+spotcast:
+  sp_dc: !secret sp_dc
+  sp_key: !secret sp_key

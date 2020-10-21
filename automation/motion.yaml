@@ -1,0 +1,130 @@
+#########################################################
+#                                                       #
+#                   MOTION AUTOMATION                   #
+#                                                       #
+#########################################################
+
+  - alias: If there is motion and its dark turn off the light in bath room
+    initial_state: true
+    id: motion01
+    trigger:
+      platform: state
+      entity_id: binary_sensor.motion_sensor_158d0002b70a9a
+      from: 'on'
+      to: 'off'
+      for:
+        minutes: 2
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: binary_sensor.door_window_sensor_158d000272f10b
+          state: 'on'
+    action:
+      - service: light.turn_off
+        data:
+          entity_id: light.bathroom_lights
+
+  - alias: If there is motion and its dark turn off the light in kitchen room
+    initial_state: true
+    id: motion02
+    trigger:
+      platform: state
+      entity_id: binary_sensor.motion_sensor_158d0001e08cb7
+      from: 'on'
+      to: 'off'
+      for:
+        minutes: 2
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: light.kitchen_light
+          state: 'on'
+        - condition: state
+          entity_id: sun.sun
+          state: 'below_horizon'
+        - condition: state
+          entity_id: binary_sensor.motion_sensor_158d0001e08cb7
+          state: 'off'
+        - condition: state
+          entity_id: binary_sensor.motion_sensor_158d0002fd500b
+          state: 'off'
+    action:
+      - service: light.turn_off
+        data:
+          entity_id: light.kitchen_light
+
+  - alias: If there is motion and its dark turn off the light in kitchen room backup
+    initial_state: true
+    id: motion03
+    trigger:
+      platform: state
+      entity_id: binary_sensor.motion_sensor_158d0002fd500b
+      from: 'on'
+      to: 'off'
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: light.kitchen_light
+          state: 'on'
+        - condition: state
+          entity_id: sun.sun
+          state: 'below_horizon'
+        - condition: state
+          entity_id: binary_sensor.motion_sensor_158d0001e08cb7
+          state: 'off'
+        - condition: state
+          entity_id: binary_sensor.motion_sensor_158d0002fd500b
+          state: 'off'
+    action:
+      - service: light.turn_off
+        data:
+          entity_id: light.kitchen_light
+
+  - alias: If there is motion and its dark turn on the light in bathroom
+    initial_state: true
+    id: motion04
+    trigger:
+      platform: state
+      entity_id: binary_sensor.motion_sensor_158d0002b70a9a
+      from: 'off'
+      to: 'on'
+    condition:
+      condition: numeric_state
+      entity_id: sensor.illumination_158d0002b70a9a
+      below: 50
+    action:
+      - service: scene.turn_on
+        data:
+          entity_id: scene.bath_room_warm_white
+
+  - alias: If there is motion and its dark turn on the light in kitchen room
+    initial_state: true
+    id: motion05
+    trigger:
+      platform: state
+      entity_id: binary_sensor.motion_sensor_158d0001e08cb7
+      from: 'off'
+      to: 'on'
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: light.kitchen_light
+          state: 'off'
+        - condition: state
+          entity_id: sun.sun
+          state: 'below_horizon'
+    action:
+      - service: light.turn_on
+        data:
+          entity_id: light.kitchen_light
+
+
+#########################################################
+#                                                       #
+#            END OF CONFIGURATION FILE                  #
+#                                                       #
+#########################################################

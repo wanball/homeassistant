@@ -1,0 +1,243 @@
+###############################################################################
+#   @author         :   Wannarut Bunsang
+#   @date           :   25/12/2019
+#   @package        :   Yeelight Lights
+#   @description    :
+#   @url            :   https://www.home-assistant.io/integrations/light/
+###############################################################################
+#omeassistant:
+
+###############################################################################
+#                               Scene                                         #
+###############################################################################
+
+scene:
+  - name: bed_room_warm_white
+    entities:
+      light.bed_room_1:
+        state: "on"
+        color_temp: 333
+        brightness: 243
+      light.bed_room_2:
+        state: "on"
+        color_temp: 333
+        brightness: 243
+  - name: bath_room_warm_white
+    entities:
+      light.bathroom_light_1:
+        state: "on"
+        color_temp: 278
+        brightness: 252
+      light.bathroom_light_2:
+        state: "on"
+        color_temp: 278
+        brightness: 252
+
+###############################################################################
+#                               Automations                                   #
+###############################################################################
+automation:
+  - alias: Toggle bedroom ceil light on wall switch
+    id: light001
+    initial_state: on
+    trigger:
+      - platform: event
+        event_type: xiaomi_aqara.click
+        event_data:
+          click_type: single
+          entity_id: binary_sensor.wall_switch_158d00015efd30
+    action:
+      - service: light.toggle
+        entity_id:
+          - light.bed_room_1
+          - light.bed_room_2
+
+  - alias: Toggle bedroom ceil light on wall switch 2
+    id: light002
+    initial_state: on
+    trigger:
+      - platform: event
+        event_type: xiaomi_aqara.click
+        event_data:
+          click_type: single
+          entity_id: binary_sensor.wall_switch_left_158d000256a0a3
+    action:
+      - service: light.toggle
+        entity_id:
+          - light.bed_room_1
+          - light.bed_room_2
+
+  - alias: Toggle bedroom ceil light on wall switch 3
+    id: light003
+    initial_state: on
+    trigger:
+      - platform: event
+        event_type: xiaomi_aqara.click
+        event_data:
+          click_type: single
+          entity_id: binary_sensor.wall_switch_left_158d000254cc2e
+    action:
+      - service: light.toggle
+        entity_id:
+          - light.bed_room_1
+          - light.bed_room_2
+
+  - alias: Toggle floor lamp on wall switch 1
+    id: light004
+    initial_state: on
+    trigger:
+      - platform: event
+        event_type: xiaomi_aqara.click
+        event_data:
+          click_type: single
+          entity_id: binary_sensor.wall_switch_right_158d000256a0a3
+    action:
+      - service: light.toggle
+        entity_id: light.floor_lamp
+
+  - alias: Toggle floor lamp on wall switch 2
+    id: light005
+    initial_state: on
+    trigger:
+      - platform: event
+        event_type: xiaomi_aqara.click
+        event_data:
+          click_type: single
+          entity_id: binary_sensor.wall_switch_right_158d000254cc2e
+    action:
+      - service: light.toggle
+        entity_id: light.floor_lamp
+
+  - alias: If there is bedroon door open and its dark turn on the bookshelf light
+    id: light006
+    initial_state: on
+    trigger:
+      platform: state
+      entity_id: binary_sensor.door_window_sensor_158d0001b7aecf
+      from: "off"
+      to: "on"
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: light.living_room_lights
+          state: "off"
+        - condition: state
+          entity_id: sun.sun
+          state: "below_horizon"
+        - condition: state
+          entity_id: group.family
+          state: home
+    action:
+      - service: switch.turn_on
+        entity_id: switch.0623071584f3eb78ee2a_3
+
+  - alias: If there is bedroon door open and its dark turn off the bookshelf light
+    id: light007
+    initial_state: on
+    trigger:
+      platform: state
+      entity_id: binary_sensor.door_window_sensor_158d0001b7aecf
+      from: "on"
+      to: "off"
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: light.living_room_lights
+          state: "off"
+        - condition: state
+          entity_id: sun.sun
+          state: "below_horizon"
+        - condition: state
+          entity_id: group.family
+          state: home
+    action:
+      - service: switch.turn_off
+        entity_id: switch.0623071584f3eb78ee2a_3
+
+  - alias: toggle balcony light on balcony switch
+    id: light008
+    initial_state: on
+    trigger:
+      - platform: event
+        event_type: xiaomi_aqara.click
+        event_data:
+          entity_id: binary_sensor.wall_switch_158d000171024a
+          click_type: single
+    action:
+      - service: light.toggle
+        entity_id: light.balcony_light
+
+  - alias: Turn on balcony light on door sensor
+    id: light009
+    initial_state: on
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.door_window_sensor_158d0001de5eaa
+        from: "off"
+        to: "on"
+    condition:
+      - condition: state
+        entity_id: sun.sun
+        state: "below_horizon"
+    action:
+      - service: light.turn_on
+        entity_id: light.balcony_light
+
+  - alias: Turn off balcony light on door sensor
+    id: light010
+    initial_state: on
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.door_window_sensor_158d0001de5eaa
+        from: "on"
+        to: "off"
+    action:
+      - service: light.turn_off
+        entity_id: light.balcony_light
+
+  - alias: change tone bedroom light
+    id: light011
+    initial_state: on
+    trigger:
+      - platform: state
+        entity_id: light.bed_room_2
+        from: "off"
+        to: "on"
+    action:
+      - service: scene.turn_on
+        data:
+          entity_id: scene.bed_room_warm_white
+
+  - alias: Toggle bathroom ceil light on wall switch
+    id: light022
+    initial_state: on
+    trigger:
+      - platform: event
+        event_type: xiaomi_aqara.click
+        event_data:
+          click_type: single
+          entity_id: binary_sensor.wall_switch_158d0002c9d5a7
+    action:
+      - service: light.toggle
+        entity_id:
+          - light.bathroom_lights
+# - alias: change tone bathroom light
+#   id: light023
+#   initial_state: on
+#   trigger:
+#     - platform: state
+#       entity_id: light.bathroom_lights
+#       from: 'off'
+#       to: 'on'
+#   action:
+#     - service: scene.turn_on
+#       data:
+#         entity_id: scene.bath_room_warm_white
+
+####################################################
+#                                                  #
+#           END OF CONFIGURATION FILE              #
+#                                                  #
+####################################################

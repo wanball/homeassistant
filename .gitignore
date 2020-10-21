@@ -12,6 +12,14 @@
 !.ssh/
 !id_rsa*
 
+# Comment this if you don't want to include your Node-RED flows.
+!automation/
+!custom_components/
+!esphome/
+!packages/
+!sensors/
+!www/
+
 # Ignore folders.
 .storage
 .cloud

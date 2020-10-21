@@ -1,0 +1,285 @@
+###############################################################################
+#   @author         :   Wannarut Bunsang
+#   @date           :   18/12/2019
+#   @package        :   Yeelight Lights
+#   @description    :   
+#   @url            :   https://www.home-assistant.io/integrations/yeelight/
+###############################################################################
+homeassistant:
+  customize:
+    light.peamai_bedside:
+      icon: mdi:lamp
+    light.ceiling_lamp_1:
+      icon: mdi:lamp
+    light.ceiling_lamp_3:
+      icon: mdi:lamp
+
+yeelight:
+  devices:
+    10.0.1.212:
+      model: color2
+      name: Ceiling Lamp 1
+    10.0.1.223:
+      model: color2
+      name: Ceiling Lamp 2
+    10.0.1.220:
+      model: color2
+      name: Ceiling Lamp 3
+    10.0.1.221:
+      model: color1
+      name: Ceiling Lamp 4
+    10.0.1.211:
+      model: color1
+      name: Peamai Bedside
+      transition: 1000 
+
+light:
+  - platform: group
+    name: Living Room Lights
+    entities:
+      - light.ceiling_lamp_1
+      - light.ceiling_lamp_2
+      - light.ceiling_lamp_3
+      - light.ceiling_lamp_4
+###############################################################################
+#                               Scene                                         #
+###############################################################################
+
+scene:
+  - name: Living Room Zone 1 Default
+    entities:
+      light.ceiling_lamp_1:
+        state: "on"
+        color_temp: 310
+        brightness: 255
+      light.ceiling_lamp_2:
+        state: "on"
+        color_temp: 310
+        brightness: 255
+
+  - name: Living Room Zone 2 Default
+    entities:
+      light.ceiling_lamp_3:
+        state: "on"
+        color_temp: 310
+        brightness: 255
+      light.ceiling_lamp_4:
+        state: "on"
+        color_temp: 310
+        brightness: 255
+
+  - name: Living Room Movie
+    entities:
+      light.ceiling_lamp_1:
+        state: "on"
+        xy_color: [0.188, 0.121]
+        brightness: 128
+        color_temp: 310
+      light.ceiling_lamp_2:
+        state: "on"
+        xy_color: [0.188, 0.121]
+        brightness: 128
+        color_temp: 310
+        
+  - name: Living Room Romantic
+    entities:
+      light.ceiling_lamp_1:
+        state: "on"
+        xy_color: [0.51, 0.239]
+        brightness: 5
+      light.ceiling_lamp_2:
+        state: "on"
+        xy_color: [0.51, 0.239]
+        brightness: 5
+      light.ceiling_lamp_3:
+        state: "on"
+        xy_color: [0.51, 0.239]
+        brightness: 5
+      light.ceiling_lamp_4:
+        state: "on"
+        xy_color: [0.51, 0.239]
+        brightness: 5
+
+###############################################################################
+#                               Automations                                   #
+###############################################################################
+automation: 
+- alias: toggle light in Living Room Zone 1 on single press
+  id: light012
+  initial_state: true
+  trigger:
+    platform: event
+    event_type: xiaomi_aqara.click
+    event_data:
+      entity_id: binary_sensor.wall_switch_left_158d0002150321
+      click_type: single
+  action:
+    - service: light.toggle
+      entity_id:
+        - light.ceiling_lamp_1
+        - light.ceiling_lamp_2
+
+- alias: toggle on light in Living Room Zone 2 on single press
+  id: light013
+  initial_state: true
+  trigger:
+    platform: event
+    event_type: xiaomi_aqara.click
+    event_data:
+      entity_id: binary_sensor.wall_switch_right_158d0002150321
+      click_type: single
+  action:
+    - service: light.toggle
+      entity_id:
+        - light.ceiling_lamp_3
+        - light.ceiling_lamp_4
+
+- alias: turn off light in Living Room Zone 1
+  id: light014
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: light.ceiling_lamp_1
+      from: 'on'
+      to: 'off'
+  action:
+    - service: light.turn_off
+      data:
+        entity_id: light.ceiling_lamp_2
+
+- alias: turn off light in Living Room Zone 2
+  id: light015
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: light.ceiling_lamp_3
+      from: 'on'
+      to: 'off'
+  action:
+    - service: light.turn_off
+      data:
+        entity_id:
+          - light.ceiling_lamp_4
+
+- alias: change tone in Living Room Zone 1
+  id: light016
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: light.ceiling_lamp_1
+      from: 'off'
+      to: 'on'
+  action:
+    - service: scene.turn_on
+      data:
+        entity_id: scene.living_room_zone_1_default
+
+- alias: change tone in Living Room Zone 2
+  id: light017
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: light.ceiling_lamp_3
+      from: 'off'
+      to: 'on'
+  action:
+    - service: scene.turn_on
+      data:
+        entity_id: scene.living_room_zone_2_default
+
+- alias: Toggle lamp on single press
+  id: light018
+  initial_state: true
+  trigger:
+    - platform: event
+      event_type: xiaomi_aqara.click
+      event_data:
+        entity_id: binary_sensor.switch_158d000170b8c8
+        click_type: single
+  action:
+    - service: light.toggle
+      entity_id: light.peamai_bedside
+
+- alias: turn on the living room lights 25 minutes before sunset
+  id: light019
+  initial_state: true
+  trigger:
+    - platform: sun
+      event: sunset
+      offset: "-00:25:00"
+  condition:
+    - condition: state
+      entity_id: group.family
+      state: home
+  action:
+    - service: scene.turn_on
+      entity_id:
+        - scene.living_room_zone_1_default
+        - scene.living_room_zone_2_default
+
+- alias: turn on the living room lights door open
+  id: light020
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_158d0001dacf08
+      from: 'off'
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: sun.sun
+      state: 'below_horizon'
+  action:
+    - service: scene.turn_on
+      entity_id:
+        - scene.living_room_zone_1_default
+        - scene.living_room_zone_2_default
+
+- alias: turn on the living room lights in low light
+  id: light021
+  initial_state: true
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.light_detection_sensor_light_level
+      below: 18
+      for:
+        minutes: 5
+  condition:
+    condition: and
+    conditions:
+      - condition: time
+        before: '20:00:00'
+        after: '15:00:00'    
+      - condition: state
+        entity_id: group.family
+        state: home
+  action:
+    - service: scene.turn_on
+      entity_id:
+        - scene.living_room_zone_1_default
+        - scene.living_room_zone_2_default
+
+- alias: 'Rainy Day'
+  id: light024
+  trigger:
+    - platform: state
+      entity_id: sensor.dark_sky_precip
+      to: 'rain'
+  condition:
+    - condition: state
+      entity_id: group.family
+      state: 'home'
+    - condition: time
+      after: '10:00'
+      before: '23:00'
+  action:
+    - service: scene.turn_on
+      entity_id:
+        - scene.living_room_zone_1_default
+        - scene.living_room_zone_2_default
+
+####################################################
+#                                                  #
+#           END OF CONFIGURATION FILE              #
+#                                                  #
+####################################################

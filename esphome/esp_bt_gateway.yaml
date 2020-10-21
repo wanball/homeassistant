@@ -1,0 +1,110 @@
+substitutions:
+  devicename: bt_gateway
+  upper_devicename: BT Gateway
+  mqtt_broker: !secret mqtt_host
+
+esphome:
+  name: $devicename
+  platform: ESP32
+  board: m5stick-c
+
+wifi:
+  networks:
+  - ssid: !secret wifi_ssid
+    password: !secret wifi_password
+  ap:
+    ssid: ${upper_devicename} Fallback Hotspot
+    password: !secret wifi_password
+  manual_ip:
+    # Set this to the IP of the ESP
+    static_ip: 10.0.1.73
+    # Set this to the IP address of the router. Often ends with .1
+    gateway: 10.0.1.1
+    # The subnet of the network. 255.255.255.0 works for most home networks.
+    subnet: 255.255.255.0
+      
+captive_portal:
+    
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: !secret esphome_pass
+
+ota:
+  password: !secret esphome_pass
+
+# ENV Hat
+i2c:
+  sda: 0
+  scl: 26
+  scan: True
+
+esp32_ble_tracker:
+
+sensor:
+  - platform: bmp280
+    pressure:
+      name: ${upper_devicename} Pressure
+    address: 0x76
+    
+  - platform: dht12
+    temperature:
+      name: ${upper_devicename} Temperature
+      on_value_range:
+        - above: 37.0
+          then:
+            - switch.turn_on: server_rack_fan
+        - below: 34.0
+          then:
+            - switch.turn_off: server_rack_fan
+    humidity:
+      name: ${upper_devicename} Humidity
+    
+  - platform: uptime
+    name: "ESP Gate Way System Uptime"
+    filters:
+      - lambda: return x / 3600.0;
+    unit_of_measurement: "hours"
+    accuracy_decimals: 2
+
+  - platform: xiaomi_lywsdcgq
+    mac_address: 4C:65:A8:D1:0B:11
+    temperature:
+      name: "Xiaomi MiJia Temperature"
+    humidity:
+      name: "Xiaomi MiJia Humidity"
+    battery_level:
+      name: "Xiaomi MiJia Battery Level"
+      
+  - platform: xiaomi_lywsd02
+    mac_address: E7:2E:01:10:98:37
+    temperature:
+      name: "Xiaomi Balcony Temperature"
+    humidity:
+      name: "Xiaomi Balcony Humidity"
+      
+switch:
+  - platform: gpio
+    name: "Server Rack Fan Switch"
+    pin:
+      number: GPIO32
+      inverted: yes
+    id: server_rack_fan
+
+  - platform: restart
+    name: ${upper_devicename} Restart    
+    
+binary_sensor:
+  - platform: status
+    name: "ESP Gate Way System Status"   
+    
+  - platform: gpio
+    pin:
+      number: GPIO37
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Power Button"
+    on_press:
+      - switch.toggle: server_rack_fan

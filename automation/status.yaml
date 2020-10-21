@@ -1,0 +1,47 @@
+#########################################################
+#                                                       #
+#                    STATUS AUTOMATION                  #
+#                                                       #
+#########################################################
+
+  - alias: Reboot Intel Nuc and no person
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.esp_gate_way_system_status
+        from: 'off'
+        to: 'on'
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: group.family
+          state: 'not_home'
+    action:
+      - service: switch.turn_on
+        data:
+          entity_id: switch.routine_leaving_home
+
+  - alias: Reboot Intel Nuc and person in home
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.esp_gate_way_system_status
+        from: 'off'
+        to: 'on'
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: group.family
+          state: 'home'
+        - condition: state
+          entity_id: sun.sun
+          state: 'below_horizon'
+    action:
+      - service: light.turn_off
+        entity_id: group.all_lights
+
+#########################################################
+#                                                       #
+#            END OF CONFIGURATION FILE                  #
+#                                                       #
+#########################################################

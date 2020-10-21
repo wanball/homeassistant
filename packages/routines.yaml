@@ -1,0 +1,383 @@
+###############################################################################
+#   @author         :   Wannarut Bunsang
+#   @date           :   25/12/2019
+#   @package        :   Routines
+#   @description    :
+#   @url            :
+###############################################################################
+
+###############################################################################
+#                              INPUT SELECT                                   #
+###############################################################################
+
+input_select:
+  routines:
+    name: Routines
+    options:
+      - 1 #I'm Home
+      - 2 #Leving home
+      - 3 #good morning
+      - 4 #good night
+      - 5 #Nothing
+      - 6 #living room turn off
+    initial: 5
+
+###############################################################################
+#                                SWITCH                                       #
+###############################################################################
+switch:
+  - platform: template
+    switches:
+      routine_good_night:
+        value_template: "{{ is_state('input_select.routines', '3') }}"
+        turn_on:
+          service: script.turn_on
+          data:
+            entity_id: script.routine_good_night
+        turn_off:
+          service: input_select.select_option
+          data:
+            entity_id: input_select.routines,
+            option: 5
+      routine_good_morning:
+        value_template: "{{ is_state('input_select.routines', '4') }}"
+        turn_on:
+          service: script.turn_on
+          data:
+            entity_id: script.routine_good_morning
+        turn_off:
+          service: input_select.select_option
+          data:
+            entity_id: input_select.routines,
+            option: 5
+      routine_i_am_home:
+        value_template: "{{ is_state('input_select.routines', '1') }}"
+        turn_on:
+          service: script.turn_on
+          data:
+            entity_id: script.routine_i_am_home
+        turn_off:
+          service: input_select.select_option
+          data:
+            entity_id: input_select.routines,
+            option: 5
+      routine_leaving_home:
+        value_template: "{{ is_state('input_select.routines', '2') }}"
+        turn_on:
+          service: script.turn_on
+          data:
+            entity_id: script.routine_leaving_home
+        turn_off:
+          service: input_select.select_option
+          data:
+            entity_id: input_select.routines,
+            option: 5
+      routine_living_room_turn_off:
+        value_template: "{{ is_state('input_select.routines', '6') }}"
+        turn_on:
+          service: script.turn_on
+          data:
+            entity_id: script.routine_living_room_turn_off
+        turn_off:
+          service: input_select.select_option
+          data:
+            entity_id: input_select.routines,
+            option: 5
+
+###############################################################################
+#                               Automations                                   #
+###############################################################################
+automation:
+  - alias: Turn on device when people are home
+    id: routines01
+    initial_state: true
+    trigger:
+      - platform: state
+        entity_id: group.family
+        from: "not_home"
+        to: "home"
+    action:
+      - service: switch.turn_on
+        data:
+          entity_id: switch.routine_i_am_home
+
+  - alias: Turn off device when nobody's home
+    id: routines02
+    initial_state: true
+    trigger:
+      - platform: state
+        entity_id: group.family
+        from: "home"
+        to: "not_home"
+    action:
+      - service: switch.turn_on
+        data:
+          entity_id: switch.routine_leaving_home
+
+  - alias: "Change staus to I am home"
+    id: routines03
+    initial_state: true
+    trigger:
+      - platform: time
+        at: "08:00:00"
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: switch.routine_good_morning
+          state: "on"
+        - condition: state
+          entity_id: group.family
+          state: "home"
+    action:
+      - service: switch.turn_on
+        data:
+          entity_id:
+            - switch.routine_i_am_home
+
+  - alias: Good Morning
+    id: routines04
+    initial_state: true
+    trigger:
+      - platform: sun
+        event: sunrise
+        offset: "+00:15:00"
+    condition:
+      - condition: state
+        entity_id: group.family
+        state: home
+    action:
+      - service: switch.turn_on
+        data:
+          entity_id: switch.routine_good_morning
+
+  - alias: good night on wall switch
+    id: routines05
+    initial_state: true
+    trigger:
+      - platform: event
+        event_type: xiaomi_aqara.click
+        event_data:
+          entity_id: binary_sensor.switch_158d0002135afe
+          click_type: double
+          # entity_id: binary_sensor.wall_switch_both_158d0002150321
+          # click_type: both
+    action:
+      - service: switch.turn_on
+        data:
+          entity_id: switch.routine_good_night
+
+  - alias: wake on night by wall switch
+    id: routines06
+    initial_state: true
+    trigger:
+      - platform: event
+        event_type: xiaomi_aqara.click
+        event_data:
+          entity_id: binary_sensor.wall_switch_left_158d000254cc2e
+          click_type: single
+    condition:
+      - condition: state
+        entity_id: switch.routine_good_night
+        state: "on"
+    action:
+      - service: switch.turn_on
+        data:
+          entity_id: switch.routine_i_am_home
+
+  - alias: homeassistant start when nobody's home
+    id: routines07
+    initial_state: true
+    trigger:
+      - platform: homeassistant
+        event: start
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: group.family
+          state: "not_home"
+    action:
+      - service: switch.turn_on
+        data:
+          entity_id:
+            - switch.routine_leaving_home
+
+  - alias: homeassistant starte when people are home
+    id: routines08
+    initial_state: true
+    trigger:
+      - platform: homeassistant
+        event: start
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: group.family
+          state: "home"
+    action:
+      - service: switch.turn_on
+        data:
+          entity_id:
+            - switch.routine_i_am_home
+
+###############################################################################
+#                                 SCRIPT                                      #
+###############################################################################
+script:
+  routine_i_am_home:
+    sequence:
+      - service: switch.turn_on
+        data:
+          entity_id:
+            - switch.bedroom_fan_plug
+            - switch.bedroom_fan_plug_usb
+            - switch.washing_machine
+            - switch.plug_158d0003a03948
+            - switch.nas_wake
+      - service: fan.turn_on
+        data:
+          entity_id:
+            - fan.living_room_air_purifier
+          speed: "Auto"
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.routines
+          option: 1
+      - service: input_boolean.turn_off
+        data:
+          entity_id: input_boolean.robot_vacuum_active
+
+  routine_leaving_home:
+    sequence:
+      - service: switch.turn_off
+        data:
+          entity_id:
+            - switch.bedroom_fan_plug
+            - switch.bedroom_fan_plug_usb
+            - switch.0623071584f3eb78ee2a_2
+            - switch.plug_158d0003a03948
+      - service: fan.turn_off
+        data:
+          entity_id:
+            - fan.living_room_air_purifier
+      - service: light.turn_off
+        data:
+          entity_id:
+            - light.balcony_light
+            - light.sub_balcony_light
+            - light.book_lamp
+            - light.living_room_lights
+            - light.kitchen_light
+            - light.peamai_bedside
+            - light.christmas_tree
+            - light.floor_lamp
+            - light.bed_room_1
+            - light.bed_room_2
+            - light.bathroom_lights
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.routines
+          option: 2
+      - service: climate.set_operation_mode
+        data:
+          entity_id: climate.living_room_air_conditioner
+          operation_mode: "off"
+      - service: media_player.turn_off
+        data:
+          entity_id:
+            - media_player.mybraviatv
+
+  routine_good_morning:
+    sequence:
+      - service: switch.turn_on
+        data:
+          entity_id:
+            - switch.washing_machine
+            - switch.bedroom_fan_plug_usb
+      - service: switch.turn_off
+        data:
+          entity_id: switch.plug_158d0003a03948
+      - service: fan.turn_on
+        data:
+          entity_id:
+            - fan.living_room_air_purifier
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.routines
+          option: 4
+      - service: input_boolean.turn_off
+        data:
+          entity_id: input_boolean.robot_vacuum_active
+
+  routine_good_night:
+    sequence:
+      # - service: switch.turn_off
+      #   data:
+      #     entity_id:
+      #- switch.living_room_fan
+      - service: fan.turn_off
+        data:
+          entity_id:
+            - fan.living_room_air_purifier
+      - service: light.turn_off
+        data:
+          entity_id:
+            - light.balcony_light
+            - light.sub_balcony_light
+            - light.book_lamp
+            - light.living_room_lights
+            - light.kitchen_light
+            - light.christmas_tree
+            - light.floor_lamp
+            - light.bed_room_2
+            - light.bathroom_lights
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.routines
+          option: 3
+      - service: light.turn_on
+        data:
+          entity_id: light.bed_room_1
+          color_temp: 175
+          brightness: 1
+      - delay:
+          seconds: 30
+      - service: light.turn_off
+        data:
+          entity_id: light.bed_room_1
+      - service: media_player.turn_off
+        data:
+          entity_id:
+            - media_player.mybraviatv
+
+  routine_living_room_turn_off:
+    sequence:
+      - service: switch.turn_off
+        data:
+          entity_id:
+            - switch.0623071584f3eb78ee2a_2
+            #- switch.living_room_fan
+      - service: fan.turn_off
+        data:
+          entity_id:
+            - fan.living_room_air_purifier
+      - service: light.turn_off
+        data:
+          entity_id:
+            - light.balcony_light
+            - light.book_light
+            - light.ceiling_lamp_1
+            - light.ceiling_lamp_2
+            - light.ceiling_lamp_3
+            - light.ceiling_lamp_4
+            - light.switch_right
+      - service: input_select.select_option
+        data:
+          entity_id: input_select.routines
+          option: 6
+####################################################
+#                                                  #
+#           END OF CONFIGURATION FILE              #
+#                                                  #
+####################################################

@@ -1,0 +1,40 @@
+substitutions:
+  devicename: floorlamp
+  upper_devicename: Floor Lamp
+  mqtt_broker: !secret mqtt_host
+
+esphome:
+  name: $devicename
+  platform: ESP8266
+  board: esp01_1m
+
+wifi:
+  networks:
+  - ssid: !secret wifi_ssid
+    password: !secret wifi_password
+  ap:
+    ssid: ${upper_devicename} Fallback Hotspot
+    password: !secret wifi_password
+      
+captive_portal:
+    
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: !secret esphome_pass
+
+ota:
+  password: !secret esphome_pass
+
+output:
+  - platform: gpio
+    pin: GPIO15
+    id: relay_1
+
+light:
+  - platform: binary
+    name: "Floor Lamp"
+    id: light_1
+    output: relay_1
